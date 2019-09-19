@@ -1,0 +1,28 @@
+{
+  "name": "@toyo/oid",
+  "version": "1.0.0",
+  "description": "MongoDB ObjectID",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "tsc": "tsc -p test/ts",
+    "build": "uglifyjs index.js -m -o dist/oid.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toyobayashi/oid.git"
+  },
+  "author": "toyobayashi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toyobayashi/oid/issues"
+  },
+  "homepage": "https://github.com/toyobayashi/oid#readme",
+  "devDependencies": {
+    "@types/node": "^12.7.5",
+    "mocha": "^6.2.0",
+    "should": "^13.2.3",
+    "typescript": "^3.6.3",
+    "uglify-js": "^3.6.0"
+  }
+}
