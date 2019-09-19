@@ -119,6 +119,8 @@ function makeObjectIdError(invalidString, index) {
  * @return {ObjectId} instance of ObjectId.
  */
 function ObjectId(id) {
+  if (!(this instanceof ObjectId)) throw new TypeError('Class constructor ObjectId cannot be invoked without \'new\'');
+
   // Duck-typing to support ObjectId from different npm packages
   if (id instanceof ObjectId) return id;
 
@@ -175,7 +177,7 @@ ObjectId.prototype.toHexString = function() {
   var hexString = '';
   if (!this.id || !this.id.length) {
     throw new TypeError(
-      'invalid ObjectId, ObjectId.id must be either a string or a Buffer, but is [' +
+      'invalid ObjectId, ObjectId.id must be either a string or a Uint8Array, but is [' +
         JSON.stringify(this.id) +
         ']'
     );
@@ -215,7 +217,7 @@ ObjectId.getInc = function() {
  *
  * @method
  * @param {number} [time] optional parameter allowing to pass in a second based timestamp.
- * @return {Buffer} return the 12 byte id buffer string.
+ * @return {Uint8Array} return the 12 byte id buffer string.
  */
 ObjectId.generate = function(time) {
   if ('number' !== typeof time) {
@@ -335,7 +337,7 @@ ObjectId.createPk = function() {
  * @return {ObjectId} return the created ObjectId
  */
 ObjectId.createFromTime = function(time) {
-  var buffer = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  var buffer = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   // Encode time into first 4 bytes
   buffer[3] = time & 0xff;
   buffer[2] = (time >> 8) & 0xff;
@@ -352,9 +354,9 @@ ObjectId.createFromTime = function(time) {
  * @param {string} hexString create a ObjectId from a passed in 24 byte hexstring.
  * @return {ObjectId} return the created ObjectId
  */
-ObjectId.createFromHexString = function(string) {
+ObjectId.createFromHexString = function(hexString) {
   // Throw an error if it's not a valid setup
-  if (typeof string === 'undefined' || (string != null && string.length !== 24)) {
+  if (typeof hexString === 'undefined' || (hexString != null && hexString.length !== 24)) {
     throw new TypeError(
       'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters'
     );
@@ -370,7 +372,7 @@ ObjectId.createFromHexString = function(string) {
   var i = 0;
   while (i < 24) {
     array[n++] =
-      (decodeLookup[string.charCodeAt(i++)] << 4) | decodeLookup[string.charCodeAt(i++)];
+      (decodeLookup[hexString.charCodeAt(i++)] << 4) | decodeLookup[hexString.charCodeAt(i++)];
   }
 
   return new ObjectId(array);
@@ -380,6 +382,7 @@ ObjectId.createFromHexString = function(string) {
  * Checks if a value is a valid bson ObjectId
  *
  * @method
+ * @param {any} id
  * @return {boolean} return true if the value is a valid bson ObjectId, return false otherwise.
  */
 ObjectId.isValid = function(id) {
@@ -462,12 +465,6 @@ Object.defineProperty(ObjectId.prototype, 'generationTime', {
   }
 });
 
-/**
- * Converts to a string representation of this Id.
- *
- * @return {String} return the 24 byte hex string representation.
- * @ignore
- */
 var __u__ = 'util';
 var util;
 try {
