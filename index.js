@@ -38,9 +38,15 @@ if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomVal
     return window.crypto.getRandomValues(new Uint8Array(size));
   };
 } else {
+  var crypto;
   try {
     var c = 'crypto';
-    randomBytes = require(c).randomBytes;
+    if (typeof __non_webpack_require__ !== 'undefined') {
+      crypto = __non_webpack_require__(c);
+    } else {
+      crypto = require(c);
+    }
+    randomBytes = crypto.randomBytes;
   } catch (e) {
     // keep the fallback
   }
@@ -459,7 +465,11 @@ Object.defineProperty(ObjectId.prototype, 'generationTime', {
 var __u__ = 'util';
 var util;
 try {
-  util = require(__u__);
+  if (typeof __non_webpack_require__ !== 'undefined') {
+    util = __non_webpack_require__(__u__);
+  } else {
+    util = require(__u__);
+  }
   ObjectId.prototype[util.inspect.custom] = ObjectId.prototype.toString;
 } catch (e) {
   ObjectId.prototype['inspect'] = ObjectId.prototype.toString;
