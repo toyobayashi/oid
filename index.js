@@ -456,7 +456,14 @@ Object.defineProperty(ObjectId.prototype, 'generationTime', {
  * @return {String} return the 24 byte hex string representation.
  * @ignore
  */
-ObjectId.prototype['inspect'] = ObjectId.prototype.toString;
+var __u__ = 'util';
+var util;
+try {
+  util = require(__u__);
+  ObjectId.prototype[util.inspect.custom] = ObjectId.prototype.toString;
+} catch (e) {
+  ObjectId.prototype['inspect'] = ObjectId.prototype.toString;
+}
 
 /**
  * @ignore
