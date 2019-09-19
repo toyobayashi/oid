@@ -1,5 +1,5 @@
 {
-  "name": "@toyo/oid",
+  "name": "@tybys/oid",
   "version": "1.0.0",
   "description": "MongoDB ObjectID",
   "main": "index.js",

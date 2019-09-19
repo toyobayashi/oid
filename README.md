@@ -5,13 +5,13 @@ Use MongoDB ObjectID without installing bson.
 ## Usage
 
 ``` bash
-$ npm install @toyo/oid
+$ npm install @tybys/oid
 ```
 
 ### Browser
 
 ``` html
-<script src="node_modules/@toyo/oid/dist/oid.min.js"></script>
+<script src="node_modules/@tybys/oid/dist/oid.min.js"></script>
 
 <script>
 var oid = new ObjectId();
@@ -22,7 +22,7 @@ console.log(oid);
 ### Node.js
 
 ``` js
-const ObjectId = require('@toyo/oid')
+const ObjectId = require('@tybys/oid')
 const oid = new ObjectId()
 console.log(oid)
 ```
@@ -30,7 +30,7 @@ console.log(oid)
 ### TypeScript
 
 ``` ts
-import * as ObjectId from '@toyo/oid'
+import * as ObjectId from '@tybys/oid'
 const oid = new ObjectId()
 console.log(oid)
 ```
