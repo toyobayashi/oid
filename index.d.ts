@@ -7,21 +7,20 @@ declare class ObjectId {
   static generate (time?: null | number): string;
   static getInc(): number;
   static fromExtendedJSON(doc: ObjectId.Document): ObjectId;
-  static index: number
+  static index: number;
 
   readonly id: string | Uint8Array;
 
   toHexString(): string;
   equals(other: string | Uint8Array | ObjectId): boolean;
   getTimestamp(): Date;
-  toString(): string;
+  toString(format?: string): string;
   toJSON(): string;
-  inspect(): string;
   toExtendedJSON(): { $oid: string };
 
-  generationTime: number
+  generationTime: number;
 
-  readonly _bsontype: 'ObjectID'
+  readonly _bsontype: 'ObjectID';
 }
 
 declare namespace ObjectId {
@@ -31,4 +30,4 @@ declare namespace ObjectId {
   }
 }
 
-export = ObjectId
+export = ObjectId;

@@ -21,6 +21,12 @@ Uint8Array.prototype.toString = function(encoding) {
       res += (hex.length === 1 ? ('0' + hex) : hex);
     }
     return res;
+  } else if (encoding === 'binary') {
+    var res = '';
+    for (var i = 0; i < this.length; i++) {
+      res += String.fromCharCode(this[i]);
+    }
+    return res;
   } else {
     return bufToString.call(this);
   }
@@ -246,11 +252,11 @@ ObjectId.generate = function(time) {
  * @return {String} return the 24 byte hex string representation.
  * @ignore
  */
-ObjectId.prototype.toString = function() {
+ObjectId.prototype.toString = function(format) {
   // Is the id a buffer then use the buffer toString method to return the format
-  // if (this.id && this.id.copy) {
-  //   return this.id.toString(typeof format === 'string' ? format : 'hex');
-  // }
+  if (this.id instanceof Uint8Array) {
+    return this.id.toString(typeof format === 'string' ? format : 'hex');
+  }
 
   return this.toHexString();
 };
@@ -277,14 +283,14 @@ ObjectId.prototype.equals = function(otherId) {
     return this.toString() === otherId.toString();
   }
 
-  // if (
-  //   typeof otherId === 'string' &&
-  //   ObjectId.isValid(otherId) &&
-  //   otherId.length === 12 &&
-  //   this.id instanceof _Buffer
-  // ) {
-  //   return otherId === this.id.toString('binary');
-  // }
+  if (
+    typeof otherId === 'string' &&
+    ObjectId.isValid(otherId) &&
+    otherId.length === 12 &&
+    this.id instanceof Uint8Array
+  ) {
+    return otherId === this.id.toString('binary');
+  }
 
   if (typeof otherId === 'string' && ObjectId.isValid(otherId) && otherId.length === 24) {
     return otherId.toLowerCase() === this.toHexString();
