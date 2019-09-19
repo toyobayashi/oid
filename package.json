@@ -4,9 +4,10 @@
   "description": "MongoDB ObjectID",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha ./test/test.js",
     "tsc": "tsc -p test/ts",
-    "build": "uglifyjs index.js -m -o dist/oid.min.js"
+    "build": "uglifyjs index.js -m -o dist/oid.min.js",
+    "webpack": "webpack ./test/webpack/index.js --devtool none --mode development --output ./test/webpack/main.js&&node ./test/webpack/main.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,8 @@
     "mocha": "^6.2.0",
     "should": "^13.2.3",
     "typescript": "^3.6.3",
-    "uglify-js": "^3.6.0"
+    "uglify-js": "^3.6.0",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
   }
 }
