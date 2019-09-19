@@ -12,8 +12,23 @@
 
 'use strict';
 
-var bufToString = Uint8Array.prototype.toString;
-Uint8Array.prototype.toString = function(encoding) {
+var _r = typeof __webpack_require__ === 'undefined' ? (typeof require !== 'undefined' ? require : undefined) : __webpack_require__;
+
+var __Buffer;
+var __b__ = 'buffer'
+try {
+  if (typeof __non_webpack_require__ !== 'undefined') {
+    __Buffer = __non_webpack_require__(__b__).Buffer;
+  } else {
+    __Buffer = _r(__b__).Buffer;
+  }
+} catch (e) {}
+
+function bufferToString(encoding) {
+  if (__Buffer) {
+    return __Buffer.from(this).toString(encoding);
+  }
+
   if (encoding === 'hex') {
     var res = '';
     for (var i = 0; i < this.length; i++) {
@@ -28,9 +43,36 @@ Uint8Array.prototype.toString = function(encoding) {
     }
     return res;
   } else {
-    return bufToString.call(this);
+    var out, i, len, c;
+    var char2, char3;
+
+    out = '';
+    len = this.length;
+    i = 0;
+    while(i < len) {
+      c = this[i++];
+      switch(c >> 4) {
+        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+          // 0xxxxxxx
+          out += String.fromCharCode(c);
+          break;
+        case 12: case 13:
+          // 110x xxxx 10xx xxxx
+          char2 = this[i++];
+          out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+          break;
+        case 14:
+          // 1110 xxxx 10xx xxxx 10xx xxxx
+          char2 = this[i++];
+          char3 = this[i++];
+          out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
+          break;
+      }
+    }
+
+    return out;
   }
-};
+}
 
 function insecureRandomBytes(size) {
   var result = new Uint8Array(size);
@@ -45,12 +87,12 @@ if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomVal
   };
 } else {
   var crypto;
+  var c = 'crypto';
   try {
-    var c = 'crypto';
     if (typeof __non_webpack_require__ !== 'undefined') {
       crypto = __non_webpack_require__(c);
     } else {
-      crypto = require(c);
+      crypto = _r(c);
     }
     randomBytes = crypto.randomBytes;
   } catch (e) {
@@ -98,7 +140,8 @@ while (i < 16) decodeLookup[0x41 - 10 + i] = decodeLookup[0x61 - 10 + i] = i++;
 
 // const _Buffer = Buffer;
 function convertToHex(bytes) {
-  return bytes.toString('hex');
+  // return bytes.toString('hex');
+  return bufferToString.call(bytes, 'hex');
 }
 
 function makeObjectIdError(invalidString, index) {
@@ -257,7 +300,8 @@ ObjectId.generate = function(time) {
 ObjectId.prototype.toString = function(format) {
   // Is the id a buffer then use the buffer toString method to return the format
   if (this.id instanceof Uint8Array) {
-    return this.id.toString(typeof format === 'string' ? format : 'hex');
+    // return this.id.toString(typeof format === 'string' ? format : 'hex');
+    return bufferToString.call(this.id, typeof format === 'string' ? format : 'hex');
   }
 
   return this.toHexString();
@@ -291,7 +335,8 @@ ObjectId.prototype.equals = function(otherId) {
     otherId.length === 12 &&
     this.id instanceof Uint8Array
   ) {
-    return otherId === this.id.toString('binary');
+    // return otherId === this.id.toString('binary');
+    return otherId === bufferToString.call(this.id, 'binary');
   }
 
   if (typeof otherId === 'string' && ObjectId.isValid(otherId) && otherId.length === 24) {
@@ -471,7 +516,7 @@ try {
   if (typeof __non_webpack_require__ !== 'undefined') {
     util = __non_webpack_require__(__u__);
   } else {
-    util = require(__u__);
+    util = _r(__u__);
   }
   ObjectId.prototype[util.inspect.custom] = ObjectId.prototype.toString;
 } catch (e) {
