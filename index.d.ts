@@ -1,10 +1,25 @@
 declare class ObjectId {
-  constructor (id?: null | number | string | number[] | Uint8Array | ObjectId);
+  constructor ();
+  constructor (id: number);
+  constructor (id: string);
+  constructor (id: number[]);
+  constructor (id: Uint8Array);
+  constructor (id: ObjectId);
+
   static createFromTime (time: number): ObjectId;
   static createFromHexString (hexString: string): ObjectId;
-  static isValid (other: null | number | string | number[] | Uint8Array | ObjectId): boolean;
+
+  static isValid (otherId: number): boolean;
+  static isValid (otherId: string): boolean;
+  static isValid (otherId: number[]): boolean;
+  static isValid (otherId: Uint8Array): boolean;
+  static isValid (otherId: ObjectId): boolean;
+
   static createPk (): ObjectId;
-  static generate (time?: null | number): string;
+
+  static generate (): Uint8Array;
+  static generate (time: any): Uint8Array;
+
   static getInc(): number;
   static fromExtendedJSON(doc: ObjectId.Document): ObjectId;
   static index: number;
@@ -12,11 +27,18 @@ declare class ObjectId {
   readonly id: string | Uint8Array;
 
   toHexString(): string;
-  equals(other: string | Uint8Array | ObjectId): boolean;
+
+  equals(otherId: string): boolean;
+  equals(otherId: Uint8Array): boolean;
+  equals(otherId: ObjectId): boolean;
+
   getTimestamp(): Date;
-  toString(format?: string): string;
+
+  toString(): string;
+  toString(format: string): string;
+
   toJSON(): string;
-  toExtendedJSON(): { $oid: string };
+  toExtendedJSON(): ObjectId.EmptyDocument;
 
   generationTime: number;
 
@@ -24,8 +46,11 @@ declare class ObjectId {
 }
 
 declare namespace ObjectId {
-  export interface Document {
+  export interface EmptyDocument {
     $oid: string;
+  }
+
+  export interface Document extends EmptyDocument {
     [field: string]: any;
   }
 }

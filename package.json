@@ -1,8 +1,9 @@
 {
   "name": "@tybys/oid",
-  "version": "1.0.2",
-  "description": "MongoDB ObjectID",
+  "version": "1.0.3",
+  "description": "Use MongoDB ObjectID without installing bson.",
   "main": "index.js",
+  "keywords": ["bson", "objectid", "oid"],
   "scripts": {
     "test": "mocha ./test/test.js",
     "tsc": "tsc -p test/ts",

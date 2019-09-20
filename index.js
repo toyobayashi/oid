@@ -515,9 +515,9 @@
   var util;
   try {
     util = __node_require__('util');
-    ObjectId.prototype[util.inspect.custom] = ObjectId.prototype.toString;
+    ObjectId.prototype[util.inspect.custom || 'inspect'] = ObjectId.prototype.toString;
   } catch (e) {
-    ObjectId.prototype['inspect'] = ObjectId.prototype.toString;
+    ObjectId.prototype.inspect = ObjectId.prototype.toString;
   }
 
   /**
