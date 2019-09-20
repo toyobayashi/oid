@@ -1,6 +1,6 @@
 {
   "name": "@tybys/oid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MongoDB ObjectID",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/toyobayashi/oid#readme",
   "devDependencies": {
     "@types/node": "^12.7.5",
+    "eslint": "^6.4.0",
     "mocha": "^6.2.0",
     "should": "^13.2.3",
     "typescript": "^3.6.3",
