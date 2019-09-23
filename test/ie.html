@@ -19,6 +19,68 @@
     }
   }
 
+  it('should correctly handle objectId timestamps', function() {
+    // var test_number = {id: ObjectI()};
+    var a = ObjectId.createFromTime(1);
+    assert(a.id[0] === 0, 'a.id[0] === 0');
+    assert(a.id[1] === 0, 'a.id[1] === 0');
+    assert(a.id[2] === 0, 'a.id[2] === 0');
+    assert(a.id[3] === 1, 'a.id[3] === 1');
+    assert(a.getTimestamp().getTime() === 1000, 'a.getTimestamp().getTime() === 1000');
+
+    if (Object.defineProperty) {
+      try {
+        Object.defineProperty({}, { value: 0 })
+        var b = new ObjectId();
+        b.generationTime = 1;
+        assert(b.id[0] === 0, 'b.id[0] === 0');
+        assert(b.id[1] === 0, 'b.id[1] === 0');
+        assert(b.id[2] === 0, 'b.id[2] === 0');
+        assert(b.id[3] === 1, 'b.id[3] === 1');
+        assert(b.generationTime === 1, 'b.generationTime === 1');
+        assert(b.getTimestamp().getTime() === 1000, 'b.getTimestamp().getTime() === 1000');
+      } catch (err) {}
+    }
+  });
+
+  it('should correctly create ObjectId from uppercase hexstring', function() {
+    var a = 'AAAAAAAAAAAAAAAAAAAAAAAA';
+    var b = new ObjectId(a);
+    var c = b.equals(a); // => false
+    assert(c, 'c');
+
+    a = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+    b = new ObjectId(a);
+    c = b.equals(a); // => true
+    assert(c, 'c');
+    assert(b.toString() === a, 'b.toString() === a');
+  });
+
+  it('should isValid check input Buffer length', function() {
+    var buffTooShort = [];
+    var buffTooLong = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    var buff12Bytes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    assert(!ObjectId.isValid(buffTooShort), '!ObjectId.isValid(buffTooShort)');
+    assert(!ObjectId.isValid(buffTooLong), '!ObjectId.isValid(buffTooLong)');
+    assert(ObjectId.isValid(buff12Bytes), 'ObjectId.isValid(buff12Bytes)');
+  });
+
+  it('should throw if a 12-char string is passed in with character codes greater than 256', function() {
+    (function () { return new ObjectId('abcdefghijkl').toHexString(); })();
+    try {
+      (function () { return new ObjectId('abcdefŽhijkl').toHexString(); })();
+      console.error("new ObjectId('abcdefŽhijkl').toHexString()");
+    } catch (err) {}
+  });
+
+  it('should correctly interpret timestamps beyond 2038', function() {
+    // var farFuture = new Date('2040-01-01T00:00:00.000Z').getTime();
+    var farFuture = 2208988800000;
+    var a = new ObjectId(ObjectId.generate(farFuture / 1000));
+    assert(a.getTimestamp().getTime() === farFuture, 'a.getTimestamp().getTime() === farFuture');
+  });
+
   it('should construct with no arguments', function() {
     var o = new ObjectId();
     assert(o instanceof ObjectId, 'o instanceof ObjectId');

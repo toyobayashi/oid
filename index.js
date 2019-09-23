@@ -84,6 +84,23 @@
     return __r(request);
   }
 
+  function readUInt32BE(offset) {
+    offset = offset || 0;
+    if (__Buffer && __Buffer.isBuffer(this)) {
+      return this.readUInt32BE(offset);
+    }
+    var first = this[offset];
+    var last = this[offset + 3];
+    if (first === undefined || last === undefined) {
+      throw new RangeError('Attempt to write outside buffer bounds');
+    }
+
+    return first * Math.pow(2, 24) +
+      this[++offset] * Math.pow(2, 16) +
+      this[++offset] * Math.pow(2, 8) +
+      last;
+  }
+
   function bufferToString(encoding) {
     if (__Buffer) {
       return __Buffer.from(this).toString(encoding);
@@ -419,7 +436,7 @@
    */
   ObjectId.prototype.getTimestamp = function() {
     var timestamp = new Date();
-    var time = (this.id[3] | (this.id[2] << 8) | (this.id[1] << 16) | (this.id[0] << 24));
+    var time = readUInt32BE.call(this.id, 0);
     timestamp.setTime(Math.floor(time) * 1000);
     return timestamp;
   };

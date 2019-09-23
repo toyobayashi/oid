@@ -6,6 +6,76 @@ if (typeof require !== 'undefined') {
 }
 
 describe('ObjectIds', function() {
+  it('should correctly handle objectId timestamps', function() {
+    // var test_number = {id: ObjectI()};
+    var a = ObjectId.createFromTime(1);
+    a.id[0].should.eql(0);
+    a.id[1].should.eql(0);
+    a.id[2].should.eql(0);
+    a.id[3].should.eql(1);
+    a.getTimestamp().getTime().should.eql(1000);
+
+    var b = new ObjectId();
+    b.generationTime = 1;
+    b.id[0].should.eql(0);
+    b.id[1].should.eql(0);
+    b.id[2].should.eql(0);
+    b.id[3].should.eql(1);
+    b.generationTime.should.eql(1);
+    b.getTimestamp().getTime().should.eql(1000);
+  });
+
+  it('should correctly create ObjectId from uppercase hexstring', function() {
+    var a = 'AAAAAAAAAAAAAAAAAAAAAAAA';
+    var b = new ObjectId(a);
+    var c = b.equals(a); // => false
+    c.should.eql(true);
+
+    a = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+    b = new ObjectId(a);
+    c = b.equals(a); // => true
+    c.should.eql(true);
+    b.toString().should.eql(a);
+  });
+
+  if (typeof require !== 'undefined') {
+    it('should correctly allow for node.js inspect to work with ObjectId', function() {
+      var a = 'AAAAAAAAAAAAAAAAAAAAAAAA';
+      var b = new ObjectId(a);
+      require('util').inspect(b);
+  
+      // var c = b.equals(a); // => false
+      // expect(true).to.equal(c);
+      //
+      // var a = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+      // var b = new ObjectId(a);
+      // var c = b.equals(a); // => true
+      // expect(true).to.equal(c);
+      // expect(a).to.equal(b.toString());
+    });
+  }
+
+  it('should isValid check input Buffer length', function() {
+    var buffTooShort = [];
+    var buffTooLong = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    var buff12Bytes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    ObjectId.isValid(buffTooShort).should.not.be.ok;
+    ObjectId.isValid(buffTooLong).should.not.be.ok;
+    ObjectId.isValid(buff12Bytes).should.be.ok;
+  });
+
+  it('should throw if a 12-char string is passed in with character codes greater than 256', function() {
+    (() => new ObjectId('abcdefghijkl').toHexString()).should.not.throw();
+    (() => new ObjectId('abcdefŽhijkl').toHexString()).should.throw(TypeError);
+  });
+
+  it('should correctly interpret timestamps beyond 2038', function() {
+    var farFuture = new Date('2040-01-01T00:00:00.000Z').getTime();
+    var a = new ObjectId(ObjectId.generate(farFuture / 1000));
+    a.getTimestamp().getTime().should.eql(farFuture);
+  });
+
   it('should construct with no arguments', function() {
     var o = new ObjectId();
     o.should.be.instanceof(ObjectId);
