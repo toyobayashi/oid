@@ -12,6 +12,68 @@
 
   'use strict';
 
+  var __Buffer;
+  try {
+    __Buffer = __node_require__('buffer').Buffer;
+  } catch (e) {
+    // empty
+  }
+
+  var toString = Object.prototype.toString;
+
+  function isArray(o) {
+    if (Array.isArray) {
+      return Array.isArray(o);
+    }
+    return (toString.call(o) === '[object Array]');
+  }
+
+  function isArrayLike(o) {
+    return (typeof Uint8Array !== 'undefined' && o instanceof Uint8Array) || isArray(o);
+  }
+
+  function createBuffer(len) {
+    if (__Buffer) {
+      return __Buffer.alloc(len);
+    }
+
+    var i;
+    if (typeof Uint8Array !== 'undefined') {
+      return new Uint8Array(len);
+    }
+
+    var arr = [];
+    for (i = 0; i < len; i++) {
+      arr[i] = 0;
+    }
+
+    return arr;
+  }
+
+  function bufferFrom(buf) {
+    if (__Buffer) {
+      return __Buffer.from(buf);
+    }
+    var i;
+    if (typeof Uint8Array !== 'undefined') {
+      if (typeof Uint8Array.from === 'function') {
+        return Uint8Array.from(buf);
+      } else {
+        var uint8arr = new Uint8Array(buf.length);
+        for (i = 0; i < buf.length; i++) {
+          uint8arr[i] = buf[i];
+        }
+        return uint8arr;
+      }
+    }
+
+    var arr = [];
+    for (i = 0; i < buf.length; i++) {
+      arr[i] = buf[i];
+    }
+    return arr;
+  }
+
   function __node_require__(request) {
     var __r;
     if (typeof __webpack_require__ !== 'undefined') {
@@ -20,13 +82,6 @@
       __r = (typeof require !== 'undefined' ? require : undefined);
     }
     return __r(request);
-  }
-
-  var __Buffer;
-  try {
-    __Buffer = __node_require__('buffer').Buffer;
-  } catch (e) {
-    // empty
   }
 
   function bufferToString(encoding) {
@@ -81,13 +136,13 @@
   }
 
   function insecureRandomBytes(size) {
-    var result = new Uint8Array(size);
+    var result = createBuffer(size);
     for (var i = 0; i < size; ++i) result[i] = Math.floor(Math.random() * 256);
     return result;
   }
 
   var randomBytes = insecureRandomBytes;
-  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues && typeof Uint8Array !== 'undefined') {
     randomBytes = function(size) {
       return window.crypto.getRandomValues(new Uint8Array(size));
     };
@@ -187,13 +242,13 @@
       throw new TypeError(
         'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters'
       );
-    } /* else if (valid && typeof id === 'string' && id.length === 24 && hasBufferType) {
-    return new ObjectId(Buffer.from(id, 'hex'));
-  }  */else if (valid && typeof id === 'string' && id.length === 24) {
+    } else if (valid && typeof id === 'string' && id.length === 24 && __Buffer) {
+      return new ObjectId(__Buffer.from(id, 'hex'));
+    } else if (valid && typeof id === 'string' && id.length === 24) {
       return ObjectId.createFromHexString(id);
     } else if (id != null && id.length === 12) {
-      if (Array.isArray(id) || id instanceof Uint8Array) {
-        this.id = Uint8Array.from(id);
+      if (isArrayLike(id)) {
+        this.id = bufferFrom(id);
       } else {
         // assume 12 byte string
         this.id = id;
@@ -222,13 +277,13 @@
     var hexString = '';
     if (!this.id || !this.id.length) {
       throw new TypeError(
-        'invalid ObjectId, ObjectId.id must be either a string or a Uint8Array, but is [' +
+        'invalid ObjectId, ObjectId.id must be either a string or a Buffer, but is [' +
         JSON.stringify(this.id) +
         ']'
       );
     }
 
-    if (this.id instanceof Uint8Array) {
+    if (isArrayLike(this.id)) {
       hexString = convertToHex(this.id);
       if (ObjectId.cacheHexString) this.__id = hexString;
       return hexString;
@@ -270,7 +325,7 @@
     }
 
     var inc = ObjectId.getInc();
-    var buffer = new Uint8Array(12);
+    var buffer = createBuffer(12);
 
     // 4-byte timestamp
     buffer[3] = time & 0xff;
@@ -301,7 +356,7 @@
    */
   ObjectId.prototype.toString = function(format) {
     // Is the id a buffer then use the buffer toString method to return the format
-    if (this.id instanceof Uint8Array) {
+    if (isArrayLike(this.id)) {
       // return this.id.toString(typeof format === 'string' ? format : 'hex');
       return bufferToString.call(this.id, typeof format === 'string' ? format : 'hex');
     }
@@ -335,7 +390,7 @@
       typeof otherId === 'string' &&
       ObjectId.isValid(otherId) &&
       otherId.length === 12 &&
-      this.id instanceof Uint8Array
+      (isArrayLike(this.id))
     ) {
       // return otherId === this.id.toString('binary');
       return otherId === bufferToString.call(this.id, 'binary');
@@ -384,7 +439,7 @@
    * @return {ObjectId} return the created ObjectId
    */
   ObjectId.createFromTime = function(time) {
-    var buffer = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    var buffer = createBuffer(12);
     // Encode time into first 4 bytes
     buffer[3] = time & 0xff;
     buffer[2] = (time >> 8) & 0xff;
@@ -413,7 +468,7 @@
     // if (hasBufferType) return new ObjectId(Buffer.from(string, 'hex'));
 
     // Calculate lengths
-    var array = new Uint8Array(12);
+    var array = createBuffer(12);
 
     var n = 0;
     var i = 0;
@@ -447,7 +502,7 @@
       return true;
     }
 
-    if ((id instanceof Uint8Array) || (Array.isArray(id)) && id.length === 12) {
+    if (isArrayLike(id) && id.length === 12) {
       return true;
     }
 
@@ -495,22 +550,26 @@
     'Please use the static `ObjectId.generate(time)` instead'
   );
 
-  /**
-   * @ignore
-   */
-  Object.defineProperty(ObjectId.prototype, 'generationTime', {
-    enumerable: true,
-    get: function() {
-      return this.id[3] | (this.id[2] << 8) | (this.id[1] << 16) | (this.id[0] << 24);
-    },
-    set: function(value) {
-      // Encode time into first 4 bytes
-      this.id[3] = value & 0xff;
-      this.id[2] = (value >> 8) & 0xff;
-      this.id[1] = (value >> 16) & 0xff;
-      this.id[0] = (value >> 24) & 0xff;
-    }
-  });
+  try {
+    /**
+     * @ignore
+     */
+    Object.defineProperty(ObjectId.prototype, 'generationTime', {
+      enumerable: true,
+      get: function() {
+        return this.id[3] | (this.id[2] << 8) | (this.id[1] << 16) | (this.id[0] << 24);
+      },
+      set: function(value) {
+        // Encode time into first 4 bytes
+        this.id[3] = value & 0xff;
+        this.id[2] = (value >> 8) & 0xff;
+        this.id[1] = (value >> 16) & 0xff;
+        this.id[0] = (value >> 24) & 0xff;
+      }
+    });
+  } catch (err) {
+    ObjectId.prototype.generationTime = 0;
+  }
 
   var util;
   try {
@@ -528,7 +587,11 @@
   // In 4.0.0 and 4.0.1, this property name was changed to ObjectId to match the class name.
   // This caused interoperability problems with previous versions of the library, so in
   // later builds we changed it back to ObjectID (capital D) to match legacy implementations.
-  Object.defineProperty(ObjectId.prototype, '_bsontype', { value: 'ObjectID' });
+  try {
+    Object.defineProperty(ObjectId.prototype, '_bsontype', { value: 'ObjectID' });
+  } catch (err) {
+    ObjectId.prototype._bsontype = 'ObjectID';
+  }
 
   return ObjectId;
 

@@ -72,8 +72,8 @@ const equals: boolean = id1.equals(id2);
 
 // ----------------------------------------------------------------------------
 // should generate valid hex strings
-const str1: Uint8Array = ObjectId.generate();
-const str2: Uint8Array = ObjectId.generate(time);
+const str1: number[] | Uint8Array = ObjectId.generate();
+const str2: number[] | Uint8Array = ObjectId.generate(time);
 
 // ----------------------------------------------------------------------------
 // should convert to a hex string for JSON.stringify

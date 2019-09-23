@@ -1,0 +1,179 @@
+<script src="../index.js"></script>
+
+<script>
+(function () {
+
+  function assert(b, msg) {
+    if (!b) {
+      throw new Error(msg || 'error')
+    }
+  }
+
+  function it(msg, fn) {
+    console.log(msg);
+    try {
+      fn();
+      console.log('ok');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  it('should construct with no arguments', function() {
+    var o = new ObjectId();
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+  });
+
+  it('should have an `id` property', function() {
+    var o = new ObjectId();
+    assert(o.id.length === 12, 'o.id.length === 12');
+    assert(ObjectId.isValid(o.id), 'ObjectId.isValid(o.id)');
+  });
+
+  it('should construct with a `time` argument', function() {
+    var time = 1414093117;
+    var o = new ObjectId(time);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.toHexString().substr(0,8) === '5449593d', '5449593d');
+  });
+
+  it('should construct with an `array` argument', function() {
+    var array = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
+    var o = new ObjectId(array);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.toHexString() === '54495ad94c934721ede76d90', '54495ad94c934721ede76d90');
+  });
+
+  if (typeof Uint8Array === 'undefined') {
+    it('id should be an array', function() {
+      var array = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
+      var o = new ObjectId(array);
+      assert(o instanceof ObjectId, 'o instanceof ObjectId');
+      assert(Object.prototype.toString.call(o.id) === '[object Array]', "Object.prototype.toString.call(o.id) === '[object Array]'");
+      assert(o.toHexString() === '54495ad94c934721ede76d90', '54495ad94c934721ede76d90');
+    });
+  } else {
+    it('id should be an Uint8Array', function() {
+      var array = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
+      var o = new ObjectId(array);
+      assert(o instanceof ObjectId, 'o instanceof ObjectId');
+      assert(Object.prototype.toString.call(o.id) === '[object Uint8Array]', "Object.prototype.toString.call(o.id) === '[object Uint8Array]'");
+      assert(o.toHexString() === '54495ad94c934721ede76d90', '54495ad94c934721ede76d90');
+    });
+  }
+
+  it('should construct with a `hexString` argument', function() {
+    var hexString = '54495ad94c934721ede76d90';
+    var o = new ObjectId(hexString);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.toHexString() === hexString, 'o.toHexString() === hexString');
+  });
+
+  it('should construct with a `idString` argument', function() {
+    var idString = 'TIZÙLG!íçm';
+    var o = new ObjectId(idString);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.id === idString, 'o.id === idString');
+  });
+
+  it('should construct with `ObjectId.createFromTime(time)` and should have 0\'s at the end', function() {
+    var time = 1414093117;
+    var o = ObjectId.createFromTime(time);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.toHexString() === '5449593d0000000000000000', o.toHexString() === '5449593d0000000000000000');
+  });
+
+  it('should construct with `ObjectId.createFromHexString(hexString)`', function() {
+    var hexString = '54495ad94c934721ede76d90';
+    var o = ObjectId.createFromHexString(hexString);
+    assert(o instanceof ObjectId, 'o instanceof ObjectId');
+    assert(o.toHexString() === hexString, 'o.toHexString() === hexString');
+  });
+
+  it('should correctly retrieve timestamp', function() {
+    var testDate = new Date();
+    var object1 = new ObjectId();
+    var seconds1 = Math.floor(testDate.getTime()/1000);
+    var seconds2 = Math.floor(object1.getTimestamp().getTime()/1000);
+    assert(seconds1 === seconds2, 'seconds1 === seconds2');
+  });
+
+  it('should validate valid hex strings', function() {
+    assert(ObjectId.isValid('54495ad94c934721ede76d90'), "ObjectId.isValid('54495ad94c934721ede76d90')");
+    assert(ObjectId.isValid('aaaaaaaaaaaaaaaaaaaaaaaa'), "ObjectId.isValid('aaaaaaaaaaaaaaaaaaaaaaaa')");
+    assert(ObjectId.isValid('AAAAAAAAAAAAAAAAAAAAAAAA'), "ObjectId.isValid('AAAAAAAAAAAAAAAAAAAAAAAA')");
+    assert(ObjectId.isValid('000000000000000000000000'), "ObjectId.isValid('000000000000000000000000')");
+  });
+
+  it('should validate legit ObjectId objects', function() {
+    var o = new ObjectId();
+    assert(ObjectId.isValid(o), "ObjectId.isValid(o)");
+  });
+
+  it('should invalidate bad strings', function() {
+    assert(!ObjectId.isValid(), "!ObjectId.isValid()");
+    assert(!ObjectId.isValid(null), "!ObjectId.isValid(null)");
+    assert(!ObjectId.isValid({}), "!ObjectId.isValid({})");
+    assert(!ObjectId.isValid([]), "!ObjectId.isValid([])");
+    assert(!ObjectId.isValid(true), "!ObjectId.isValid(true)");
+    assert(!ObjectId.isValid('invalid'), "!ObjectId.isValid('invalid')");
+    assert(!ObjectId.isValid(''), "!ObjectId.isValid('')");
+    assert(!ObjectId.isValid('zzzzzzzzzzzzzzzzzzzzzzzz'), "!ObjectId.isValid('zzzzzzzzzzzzzzzzzzzzzzzz')");
+    assert(!ObjectId.isValid('54495-ad94c934721ede76d9'), "!ObjectId.isValid('54495-ad94c934721ede76d9')");
+  });
+
+  it('should evaluate equality with .equals()', function() {
+    var id1 = new ObjectId();
+    var id2 = new ObjectId(id1.toHexString());
+    assert(id1.equals(id2), 'id1.equals(id2)');
+  });
+
+  it('should evaluate equality with via deepEqual', function() {
+    var id1 = new ObjectId();
+    var id2 = new ObjectId(id1.toHexString());
+    assert(id1.toString() === id2.toString(), 'id1.toString() === id2.toString()');
+
+    var id3 = new ObjectId();
+    assert(id1.toString() !== id3.toString(), 'id1.toString() !== id3.toString()');
+  });
+
+  it('should generate valid hex strings', function() {
+    var h = ObjectId.generate();
+    assert(ObjectId.isValid(h), 'ObjectId.isValid(h)');
+  });
+
+  if (typeof JSON !== 'undefined') {
+    it('should convert to a hex string for JSON.stringify', function() {
+      var hexString = '54495ad94c934721ede76d90';
+      var o = { o: new ObjectId(hexString) };
+      var strngd = JSON.stringify(o);
+      assert(strngd === '{"o":"54495ad94c934721ede76d90"}', 'strngd');
+    });
+  }
+
+  it('should convert to a hex string for ObjectId.toString()', function() {
+    var hexString = '54495ad94c934721ede76d90';
+    var o = new ObjectId(hexString);
+    assert(o.toString() === '54495ad94c934721ede76d90', "o.toString() === '54495ad94c934721ede76d90'");
+  });
+
+  it('should throw and error if constructing with an invalid string', function() {
+    try {
+      (function(){
+        new ObjectId('tttttttttttttttttttttttt');
+      })();
+      console.error('Should throw.');
+    } catch (err) {}
+  });
+
+  it('should not throw an error for objects without toString', function() {
+    var toString = Object.prototype.toString;
+    delete Object.prototype.toString;
+    var obj = new Object();
+    assert(!obj.toString, '!obj.toString');
+    assert(!ObjectId.isValid(obj), '!ObjectId.isValid(obj)');
+    Object.prototype.toString = toString;
+  });
+
+})();
+</script>
