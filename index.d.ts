@@ -1,20 +1,27 @@
 declare class ObjectId {
-  constructor (id?: number | string | number[] | Uint8Array | ObjectId);
+  constructor(id?: number | string | number[] | Uint8Array | ObjectId);
 
-  static createFromTime (time: number): ObjectId;
-  static createFromHexString (hexString: string): ObjectId;
+  static createFromTime(time: number): ObjectId;
 
-  static isValid (otherId: number | string | number[] | Uint8Array | ObjectId): boolean;
+  static createFromHexString(hexString: string): ObjectId;
 
-  static createPk (): ObjectId;
+  static isValid(otherId: number | string | number[] | Uint8Array | ObjectId): boolean;
 
-  static generate (time?: number): number[] | Uint8Array;
+  static createPk(): ObjectId;
+
+  static generate(time?: number): number[] | Uint8Array;
 
   static getInc(): number;
+
   static fromExtendedJSON(doc: ObjectId.Document): ObjectId;
+
   static index: number;
 
   readonly id: string | number[] | Uint8Array;
+
+  readonly _bsontype: 'ObjectID';
+
+  generationTime: number;
 
   toHexString(): string;
 
@@ -25,11 +32,8 @@ declare class ObjectId {
   toString(format?: string): string;
 
   toJSON(): string;
+
   toExtendedJSON(): ObjectId.EmptyDocument;
-
-  generationTime: number;
-
-  readonly _bsontype: 'ObjectID';
 }
 
 declare namespace ObjectId {

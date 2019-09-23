@@ -9,8 +9,17 @@
     root['ObjectId'] = factory();
   }
 })(this, function() {
-
   'use strict';
+
+  function __node_require__(request) {
+    var __r;
+    if (typeof __webpack_require__ !== 'undefined') {
+      __r = (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined);
+    } else {
+      __r = (typeof require !== 'undefined' ? require : undefined);
+    }
+    return __r(request);
+  }
 
   var __Buffer;
   try {
@@ -72,16 +81,6 @@
       arr[i] = buf[i];
     }
     return arr;
-  }
-
-  function __node_require__(request) {
-    var __r;
-    if (typeof __webpack_require__ !== 'undefined') {
-      __r = (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined);
-    } else {
-      __r = (typeof require !== 'undefined' ? require : undefined);
-    }
-    return __r(request);
   }
 
   function readUInt32BE(offset) {
