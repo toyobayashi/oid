@@ -1,0 +1,4 @@
+js/dist/* linguist-generated=true
+java/.idea linguist-detectable=false
+cpp/test/mocha.c linguist-vendored
+cpp/test/mocha.h linguist-vendored
