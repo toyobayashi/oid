@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="oid">
+    <output-path>$PROJECT_DIR$/out/artifacts/oid</output-path>
+    <root id="archive" name="oid.jar">
+      <element id="module-output" name="oid-java" />
+    </root>
+  </artifact>
+</component>

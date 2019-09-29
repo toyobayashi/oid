@@ -1,3 +1,5 @@
+package com.github.toyobayashi.oid;
+
 import java.util.Date;
 import java.util.regex.Pattern;
 
