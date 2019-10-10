@@ -15,6 +15,7 @@ cmake -A Win32 -S . -B %BUILD_DIR%\ia32
 cmake --build %BUILD_DIR%\ia32 --config Release
 if not exist %DIST_DIR%\ia32 mkdir %DIST_DIR%\ia32
 copy %BUILD_DIR%\ia32\lib\Release\oid.lib %DIST_DIR%\ia32\oid.lib
+copy %BUILD_DIR%\ia32\bin\Release\oidgen.exe %DIST_DIR%\ia32\oid.exe
 if "%1"=="ia32" goto end
 
 :build_x64
@@ -23,6 +24,7 @@ cmake -A x64 -S . -B %BUILD_DIR%\x64
 cmake --build %BUILD_DIR%\x64 --config Release
 if not exist %DIST_DIR%\x64 mkdir %DIST_DIR%\x64
 copy %BUILD_DIR%\x64\lib\Release\oid.lib %DIST_DIR%\x64\oid.lib
+copy %BUILD_DIR%\x64\bin\Release\oidgen.exe %DIST_DIR%\x64\oid.exe
 if "%1"=="x64" goto end
 
 :end

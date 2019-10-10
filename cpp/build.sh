@@ -13,5 +13,6 @@ cd ../../..
 if [ "$type" == "Release" ]; then
   mkdir -p ./dist/linux
   cp -r "./build/linux/$type/lib/liboid.a" ./dist/linux/liboid.a
+  cp -r "./build/linux/$type/bin/oidgen" ./dist/linux/oid
   ./build/linux/$type/test/testoid
 fi

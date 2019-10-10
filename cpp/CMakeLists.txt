@@ -6,7 +6,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/include)
 
 if(WIN32 AND MSVC)
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT testoid)
-  add_definitions("-D_CRT_SECURE_NO_WARNINGS -DUNICODE -D_UNICODE")
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS -DUNICODE -D_UNICODE" "-DOID_VERSION=(\"1.0.0\")")
   set(
     CompilerFlags
     # CMAKE_CXX_FLAGS
@@ -29,6 +29,7 @@ endif()
 
 add_subdirectory(lib)
 add_subdirectory(test)
+add_subdirectory(bin)
 
 if(WIN32 AND MSVC)
   if(CMAKE_CL_64)
