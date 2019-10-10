@@ -1,6 +1,9 @@
 {
   "name": "@tybys/oid",
-  "version": "1.0.5",
+  "version": "1.0.6",
+  "bin": {
+    "oid": "./bin/oid.js"
+  },
   "description": "Use MongoDB ObjectID without installing bson.",
   "main": "index.js",
   "keywords": ["bson", "objectid", "oid"],

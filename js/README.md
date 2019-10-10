@@ -11,6 +11,20 @@ Use MongoDB ObjectID without installing bson.
 $ npm install @tybys/oid
 ```
 
+### CLI
+
+```
+$ oid -h
+Usage: oid [options]
+
+Options:
+  -v, -V, --version   output the version number
+  -h, --help          output usage information
+  -n, --number <N>    output N number of ObjectIds
+
+Repo: https://github.com/toyobayashi/oid
+```
+
 ### Browser
 
 IE OK!
