@@ -1,3 +1,10 @@
+#ifdef _WIN32
+#include <Windows.h>
+#define EPOCHFILETIME (116444736000000000UL)
+#else
+#include <sys/time.h>
+#endif
+
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -20,9 +27,26 @@ static double math_random() {
   return (double)r / RAND_MAX;
 }
 
+static uint64_t date_now() {
+#ifdef _WIN32
+  FILETIME ft;
+  LARGE_INTEGER li;
+  uint64_t tt = 0;
+  GetSystemTimeAsFileTime(&ft);
+  li.LowPart = ft.dwLowDateTime;
+  li.HighPart = ft.dwHighDateTime;
+  tt = (li.QuadPart - EPOCHFILETIME) / 10 / 1000;
+  return (uint64_t)tt;
+#else
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
+}
+
 static void oid_init() {
   if (!initialized) {
-    srand((unsigned int)time(NULL));
+    srand((unsigned int)date_now());
     for (uint8_t i = 0; i < 5; i++) {
       PROCESS_UNIQUE[i] = (uint8_t)(math_random() * 256);
     }

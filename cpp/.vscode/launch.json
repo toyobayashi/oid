@@ -5,12 +5,12 @@
       "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/e/code/oid-cpp/build/linux/debug/test/testoid",
+      "program": "/mnt/e/code/oid/cpp/build/linux/debug/test/testoid",
       "args": [
         ""
       ],
       "stopAtEntry": true,
-      "cwd": "/mnt/e/code/oid-cpp/build/linux/debug/test",
+      "cwd": "/mnt/e/code/oid/cpp/build/linux/debug/test",
       "environment": [],
       "externalConsole": true,
       "windows": {
