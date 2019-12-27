@@ -1,16 +1,20 @@
 {
   "name": "@tybys/oid",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "bin": {
     "oid": "./bin/oid.js"
   },
   "description": "Use MongoDB ObjectID without installing bson.",
   "main": "index.js",
-  "keywords": ["bson", "objectid", "oid"],
+  "keywords": [
+    "bson",
+    "objectid",
+    "oid"
+  ],
   "scripts": {
     "test": "mocha ./test/test.js",
     "tsc": "tsc -p test/ts",
-    "build": "uglifyjs index.js -m -o dist/oid.min.js",
+    "build": "uglifyjs index.js --ie8 -m -o dist/oid.min.js",
     "webpack": "webpack ./test/webpack/index.js --devtool none --mode development --output ./test/webpack/main.js&&node ./test/webpack/main.js"
   },
   "repository": {
@@ -30,7 +34,7 @@
     "should": "^13.2.3",
     "typescript": "^3.6.3",
     "uglify-js": "^3.6.0",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
   }
 }

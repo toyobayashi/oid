@@ -14,9 +14,9 @@
   function __node_require__(request) {
     var __r;
     if (typeof __webpack_require__ !== 'undefined') {
-      __r = (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined);
+      __r = ((typeof __non_webpack_require__ !== 'undefined' && typeof wx === 'undefined') ? __non_webpack_require__ : undefined);
     } else {
-      __r = (typeof require !== 'undefined' ? require : undefined);
+      __r = ((typeof require !== 'undefined' && typeof wx === 'undefined') ? require : undefined);
     }
     return __r(request);
   }
