@@ -78,9 +78,6 @@ static int should_validate_valid_hex_strings() {
 }
 
 int main () {
-#ifdef _WIN32
-  system("chcp 65001");
-#endif
   int res = 0;
   res = describe("ObjectId",
     should_print,

@@ -1,6 +1,42 @@
 #ifndef __OID_HPP__
 #define __OID_HPP__
 
+#ifndef __CPP17__
+#	ifdef _MSVC_LANG
+#		if _MSVC_LANG > 201402L
+#			define __CPP17__	1
+#		endif /* _MSVC_LANG > 201402L */
+#	else /* _MSVC_LANG */
+#		if __cplusplus > 201402L
+#			define __CPP17__	1
+#		endif /* __cplusplus > 201402L */
+# endif /* _MSVC_LANG */
+#endif /* __CPP17__ */
+
+#ifndef __CPP14__
+#	ifdef _MSVC_LANG
+#		if _MSVC_LANG > 201103L
+#			define __CPP14__	1
+#		endif /* _MSVC_LANG > 201103L */
+#	else /* _MSVC_LANG */
+#		if __cplusplus > 201103L
+#			define __CPP14__	1
+#		endif /* __cplusplus > 201103L */
+#	endif /* _MSVC_LANG */
+#endif /* __CPP14__ */
+
+#ifndef __CPP11__
+#	ifdef _MSVC_LANG
+#		if _MSVC_LANG > 199711L
+#			define __CPP11__	1
+#		endif /* _MSVC_LANG > 199711L */
+#	else /* _MSVC_LANG */
+#		if __cplusplus > 199711L
+#			define __CPP11__	1
+#		endif /* __cplusplus > 199711L */
+#	endif /* _MSVC_LANG */
+#endif /* __CPP11__ */
+
 #include <string>
 #include <vector>
 #include <ctime>
@@ -13,17 +49,24 @@ private:
 
 public:
   ObjectId();
+#ifdef __CPP11__
+  ObjectId(ObjectId&&);
+#endif
   ObjectId(const ObjectId&);
   ObjectId(const object_id&);
   ObjectId(uint32_t);
   ObjectId(const std::vector<uint8_t>&);
   ObjectId(const std::string&);
+  ObjectId(const char*);
   ~ObjectId();
 
-  operator object_id*();
-  operator const object_id*();
   ObjectId& operator=(const ObjectId&);
-  ObjectId& operator=(const object_id&);
+
+#ifdef __CPP11__
+  ObjectId& operator=(ObjectId&&);
+#endif
+
+  bool operator==(const ObjectId&) const;
 
   friend std::ostream& operator<<(std::ostream&, const ObjectId&);
 
@@ -36,20 +79,13 @@ public:
   static bool isValid(const std::string&);
 
   std::string toHexString() const;
-  bool equals(const std::string&) const;
   bool equals(const ObjectId&) const;
-  bool equals(const std::vector<uint8_t>&) const;
+  const object_id* data() const;
 
   uint32_t getTimestamp() const;
 };
 
-ObjectId::operator object_id*() {
-  return oid;
-}
-
-ObjectId::operator const object_id*() {
-  return oid;
-}
+const object_id* ObjectId::data() const { return oid; }
 
 ObjectId& ObjectId::operator=(const ObjectId& id) {
   for (uint8_t i = 0; i < 12; i++) {
@@ -58,16 +94,23 @@ ObjectId& ObjectId::operator=(const ObjectId& id) {
   return *this;
 }
 
-ObjectId& ObjectId::operator=(const object_id& coid) {
-  for (uint8_t i = 0; i < 12; i++) {
-    oid->id[i] = coid.id[i];
-  }
+#ifdef __CPP11__
+ObjectId& ObjectId::operator=(ObjectId&& tmp) {
+  oid = tmp.oid;
+  tmp.oid = nullptr;
   return *this;
 }
+ObjectId::ObjectId(ObjectId&& tmp) {
+  oid = tmp.oid;
+  tmp.oid = nullptr;
+}
+#endif
 
 ObjectId::~ObjectId() {
-  delete oid;
-  oid = nullptr;
+  if (oid != nullptr) {
+    delete oid;
+    oid = nullptr;
+  }
 }
 
 ObjectId::ObjectId() {
@@ -99,6 +142,8 @@ ObjectId::ObjectId(const std::string& str) {
   oid = new object_id;
   oid_construct_with_buf(oid, (const uint8_t*)str.c_str(), static_cast<uint32_t>(str.length()));
 }
+
+ObjectId::ObjectId(const char* str): ObjectId(std::string(str)) {}
 
 std::ostream& operator<<(std::ostream& os, const ObjectId& objectId) {
   os << objectId.toHexString();
@@ -142,16 +187,12 @@ std::string ObjectId::toHexString() const {
   return res;
 }
 
-bool ObjectId::equals(const std::string& str) const {
-  return static_cast<bool>(oid_equals_buf(oid, (const uint8_t*)str.c_str(), static_cast<uint32_t>(str.length())));
-}
-
-bool ObjectId::equals(const std::vector<uint8_t>& buf) const {
-  return static_cast<bool>(oid_equals_buf(oid, buf.data(), static_cast<uint32_t>(buf.size())));
-}
-
 bool ObjectId::equals(const ObjectId& objectId) const {
   return static_cast<bool>(oid_equals_oid(oid, objectId.oid));
+}
+
+bool ObjectId::operator==(const ObjectId& objectId) const {
+  return equals(objectId);
 }
 
 uint32_t ObjectId::getTimestamp() const {

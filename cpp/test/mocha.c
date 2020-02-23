@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <wchar.h>
 #else
 #include <sys/time.h>   // gettimeofday
 #endif
@@ -127,7 +128,16 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
             pass++;
 
             setFontStyle(GREEN);
-            printf("    %s ", "\xe2\x88\x9a");
+            const char s[4] = { 0xe2, 0x88, 0x9a, 0x00 };
+#ifdef _WIN32
+            wchar_t buf[2] = { 0, 0 };
+            MultiByteToWideChar(CP_UTF8, 0, s, -1, buf, 2);
+            char ss[4] = { 0, 0, 0, 0 };
+            WideCharToMultiByte(CP_ACP, 0, buf, -1, ss, 4, NULL, NULL);
+            printf("    %s ", ss);
+#else
+            printf("    %s ", s);
+#endif
             setFontStyle(DARK_GRAY);
             index = printTestName(testCaseNames, index);
             setFontStyle(YELLOW);
