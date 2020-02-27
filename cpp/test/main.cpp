@@ -77,6 +77,13 @@ static int should_validate_valid_hex_strings() {
   return 0;
 }
 
+static int should_create_from_hexstring() {
+  std::cout << ObjectId::createFromHexString("54495ad94c934721ede76d90").toHexString() << std::endl;
+  expect(ObjectId::createFromHexString("54495ad94c934721ede76d90").toHexString() == "54495ad94c934721ede76d90")
+  expect(ObjectId::createFromHexString("54495AD94C934721EDE76D90").toHexString() == "54495ad94c934721ede76d90")
+  return 0;
+}
+
 int main () {
   int res = 0;
   res = describe("ObjectId",
@@ -88,6 +95,7 @@ int main () {
     should_construct_with_a_idString_argument,
     should_construct_with_createFromTime,
     should_correctly_retrieve_timestamp,
-    should_validate_valid_hex_strings);
+    should_validate_valid_hex_strings,
+    should_create_from_hexstring);
   return res;
 }
