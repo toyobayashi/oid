@@ -1,24 +1,43 @@
 {
   "version": "2.0.0",
-  "windows": {
-    "options": {
-      "shell": {
-        "executable": "c:\\windows\\System32\\wsl.exe",
-        "args": [
-          "-e"
-        ]
-      }
-    }
-  },
   "tasks": [
+    {
+      "label": "build Debug MS",
+      "type": "shell",
+      "command": "build.bat",
+      "args": [
+        "Debug",
+        "Win32"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "build Release MS",
+      "type": "shell",
+      "command": "build.bat",
+      "args": [
+        "Release",
+        "Win32"
+      ],
+      "group": "build"
+    },
     {
       "label": "build Debug",
       "type": "shell",
       "command": "make",
       "args": [
         "-C",
-        "./build/linux/debug"
-      ]
+        "./build/linux/Debug"
+      ],
+      "group": "build",
+      "options": {
+        "shell": {
+          "executable": "c:\\windows\\System32\\wsl.exe",
+          "args": [
+            "-e"
+          ]
+        }
+      }
     },
     {
       "label": "build Release",
@@ -26,11 +45,19 @@
       "command": "make",
       "args": [
         "-C",
-        "./build/linux/release"
+        "./build/linux/Release"
       ],
       "group": {
         "kind": "build",
         "isDefault": true
+      },
+      "options": {
+        "shell": {
+          "executable": "c:\\windows\\System32\\wsl.exe",
+          "args": [
+            "-e"
+          ]
+        }
       }
     }
   ]

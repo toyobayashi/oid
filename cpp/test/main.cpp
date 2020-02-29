@@ -3,7 +3,7 @@
 #ifdef _WIN32
 #include <cstdlib>
 #endif
-#include <oid/oid.hpp>
+#include "oid.hpp"
 #include "mocha.h"
 
 static int should_correctly_handle_objectId_timestamps() {

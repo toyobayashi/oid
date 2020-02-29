@@ -1,12 +1,14 @@
 {
+  "env": {
+    "includePath": [
+      "${default}",
+      "${workspaceFolder}/include"
+    ]
+  },
   "configurations": [
     {
-      "name": "Win32",
-      "defines": [
-        "_DEBUG",
-        "UNICODE",
-        "_UNICODE"
-      ],
+      "name": "Linux",
+      "defines": [],
       "compilerPath": "/usr/bin/gcc",
       "cStandard": "c11",
       "cppStandard": "c++17",
@@ -18,10 +20,17 @@
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
       },
-      "includePath": [
-        "${default}",
-        "${workspaceFolder}/lib/include"
-      ]
+      "includePath": ["${includePath}"]
+    },
+    {
+      "name": "Win32",
+      "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+      "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.24.28314/bin/Hostx86/x86/cl.exe",
+      "windowsSdkVersion": "10.0.18362.1",
+      "intelliSenseMode": "msvc-x86",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "includePath": ["${includePath}"]
     }
   ],
   "version": 4

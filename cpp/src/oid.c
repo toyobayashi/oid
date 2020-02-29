@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <oid/oid.h>
+#include "oid.h"
 
 static uint8_t PROCESS_UNIQUE[5] = { 0 };
 static uint32_t __index = 0;

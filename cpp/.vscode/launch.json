@@ -2,17 +2,52 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(gdb) Launch",
+      "name": "MSVC",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\build\\win\\Win32\\Debug\\oidtest.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "preLaunchTask": "build Debug MS"
+    },
+    {
+      "name": "Linux",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/e/code/oid/cpp/build/linux/debug/test/testoid",
+      "program": "${config:wslProjectRoot}/build/linux/Debug/oidtest",
       "args": [
         ""
       ],
-      "stopAtEntry": true,
-      "cwd": "/mnt/e/code/oid/cpp/build/linux/debug/test",
+      "stopAtEntry": false,
+      "cwd": "${config:wslProjectRoot}/build/linux/Debug",
       "environment": [],
-      "externalConsole": true,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "build Debug",
+      "miDebuggerPath": "/usr/bin/gdb"
+    },
+    {
+      "name": "Windows WSL",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${config:wslProjectRoot}/build/linux/Debug/oidtest",
+      "args": [
+        ""
+      ],
+      "stopAtEntry": false,
+      "cwd": "${config:wslProjectRoot}/build/linux/Debug/",
+      "environment": [],
+      "externalConsole": false,
       "windows": {
         "MIMode": "gdb",
         "miDebuggerPath": "/usr/bin/gdb",
