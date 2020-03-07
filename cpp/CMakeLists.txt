@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 project(oid)
 
 set(LIB_NAME oid)
-set(EXE_NAME oidgen)
+set(EXE_NAME oidmain)
 set(TEST_EXE_NAME oidtest)
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -24,8 +24,8 @@ execute_process(COMMAND node index.js lib
 if(DEPS_LIST_oid)
   string(REPLACE "\n" ";" DEPS_LIST_oid ${DEPS_LIST_oid})
   foreach(pkg ${DEPS_LIST_oid})
-    message("add_subdirectory: ${pkg}")
-    add_subdirectory(${pkg})
+    message("add_subdirectory: ${pkg} ${pkg}")
+    add_subdirectory(${pkg} ${pkg})
   endforeach()
 endif()
 
