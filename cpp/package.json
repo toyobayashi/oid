@@ -1,5 +1,6 @@
 {
   "name": "@tybys/oid",
+  "version": "1.0.0",
   "devDependencies": {
     "@tybys/vscodecpp": "github:toyobayashi/vscodecpp"
   }
