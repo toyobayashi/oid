@@ -1,14 +1,18 @@
-file(GLOB_RECURSE SOURCE_FILES "src/lib/*.cpp" "src/lib/*.c")
+file(GLOB_RECURSE LIB_SOURCE_FILES "src/lib/*.cpp" "src/lib/*.c")
 
 if(BUILD_DLL)
   add_library(${CMAKE_PROJECT_NAME} SHARED
-    ${SOURCE_FILES}
+    ${LIB_SOURCE_FILES}
   )
 
-  target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE OID_BUILD_DLL)
+  target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE "BUILD_DLL_${CMAKE_PROJECT_NAME}")
+
+  if(NOT MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath=$ORIGIN")
+  endif()
 else()
   add_library(${CMAKE_PROJECT_NAME} STATIC
-    ${SOURCE_FILES}
+    ${LIB_SOURCE_FILES}
   )
 endif()
 

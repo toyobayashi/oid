@@ -1,6 +1,6 @@
 file(GLOB_RECURSE EXE_SOURCE_FILES "src/bin/*.cpp" "src/bin/*.c")
 
-set(EXE_NAME oidgen)
+set(EXE_NAME "${CMAKE_PROJECT_NAME}main")
 
 add_executable(${EXE_NAME} ${EXE_SOURCE_FILES})
 

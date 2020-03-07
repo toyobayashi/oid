@@ -1,0 +1,6 @@
+{
+  "name": "@tybys/oid",
+  "devDependencies": {
+    "@tybys/vscodecpp": "github:toyobayashi/vscodecpp"
+  }
+}
