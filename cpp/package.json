@@ -1,6 +1,7 @@
 {
   "name": "@tybys/oid",
   "version": "1.0.0",
+  "main": "index.js",
   "devDependencies": {
     "@tybys/vscodecpp": "github:toyobayashi/vscodecpp"
   }
