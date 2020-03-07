@@ -13,23 +13,23 @@ include(cmake/exe.cmake)
 include(cmake/test.cmake)
 
 execute_process(COMMAND node index.js
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE DEPS_LIST
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE DEPS_LIST_oid
 )
 execute_process(COMMAND node index.js lib
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE LIB_LIST
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE LIB_LIST_oid
 )
 
-if(DEPS_LIST)
-  string(REPLACE "\n" ";" DEPS_LIST ${DEPS_LIST})
-  foreach(pkg ${DEPS_LIST})
+if(DEPS_LIST_oid)
+  string(REPLACE "\n" ";" DEPS_LIST_oid ${DEPS_LIST_oid})
+  foreach(pkg ${DEPS_LIST_oid})
     message("add_subdirectory: ${pkg}")
     add_subdirectory(${pkg})
   endforeach()
 endif()
 
-if(LIB_LIST)
-  string(REPLACE "\n" ";" LIB_LIST ${LIB_LIST})
-  target_link_libraries(oid ${LIB_LIST})
+if(LIB_LIST_oid)
+  string(REPLACE "\n" ";" LIB_LIST_oid ${LIB_LIST_oid})
+  target_link_libraries(oid ${LIB_LIST_oid})
 endif()
