@@ -3,8 +3,6 @@
 #include <string.h>
 #include "oid/oid.h"
 
-#define OID_VERSION "1.0.0"
-
 void printHelp(const char* exec_name) {
   printf("Usage: %s [options]\n", exec_name);
   printf("\nOptions:\n");

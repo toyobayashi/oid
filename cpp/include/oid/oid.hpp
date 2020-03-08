@@ -85,9 +85,9 @@ public:
   uint32_t getTimestamp() const;
 };
 
-const object_id* ObjectId::data() const { return oid; }
+inline const object_id* ObjectId::data() const { return oid; }
 
-ObjectId& ObjectId::operator=(const ObjectId& id) {
+inline ObjectId& ObjectId::operator=(const ObjectId& id) {
   for (uint8_t i = 0; i < 12; i++) {
     oid->id[i] = id.oid->id[i];
   }
@@ -95,107 +95,107 @@ ObjectId& ObjectId::operator=(const ObjectId& id) {
 }
 
 #ifdef __CPP11__
-ObjectId& ObjectId::operator=(ObjectId&& tmp) {
+inline ObjectId& ObjectId::operator=(ObjectId&& tmp) {
   oid = tmp.oid;
   tmp.oid = nullptr;
   return *this;
 }
-ObjectId::ObjectId(ObjectId&& tmp) {
+inline ObjectId::ObjectId(ObjectId&& tmp) {
   oid = tmp.oid;
   tmp.oid = nullptr;
 }
 #endif
 
-ObjectId::~ObjectId() {
+inline ObjectId::~ObjectId() {
   if (oid != nullptr) {
     delete oid;
     oid = nullptr;
   }
 }
 
-ObjectId::ObjectId() {
+inline ObjectId::ObjectId() {
   oid = new object_id;
   oid_construct(oid);
 }
 
-ObjectId::ObjectId(const object_id& coid) {
+inline ObjectId::ObjectId(const object_id& coid) {
   oid = new object_id;
   oid_construct_with_oid(oid, &coid);
 }
 
-ObjectId::ObjectId(const ObjectId& other) {
+inline ObjectId::ObjectId(const ObjectId& other) {
   oid = new object_id;
   oid_construct_with_oid(oid, other.oid);
 }
 
-ObjectId::ObjectId(uint32_t time) {
+inline ObjectId::ObjectId(uint32_t time) {
   oid = new object_id;
   oid_construct_with_time(oid, time);
 }
 
-ObjectId::ObjectId(const std::vector<uint8_t>& buf) {
+inline ObjectId::ObjectId(const std::vector<uint8_t>& buf) {
   oid = new object_id;
   oid_construct_with_buf(oid, buf.data(), static_cast<uint32_t>(buf.size()));
 }
 
-ObjectId::ObjectId(const std::string& str) {
+inline ObjectId::ObjectId(const std::string& str) {
   oid = new object_id;
   oid_construct_with_buf(oid, (const uint8_t*)str.c_str(), static_cast<uint32_t>(str.length()));
 }
 
-ObjectId::ObjectId(const char* str): ObjectId(std::string(str)) {}
+inline ObjectId::ObjectId(const char* str): ObjectId(std::string(str)) {}
 
-std::ostream& operator<<(std::ostream& os, const ObjectId& objectId) {
+inline std::ostream& operator<<(std::ostream& os, const ObjectId& objectId) {
   os << objectId.toHexString();
   return os;
 }
 
-std::vector<uint8_t> ObjectId::generate() {
+inline std::vector<uint8_t> ObjectId::generate() {
   return generate(static_cast<uint32_t>(time(nullptr)));
 }
 
-std::vector<uint8_t> ObjectId::generate(uint32_t time) {
+inline std::vector<uint8_t> ObjectId::generate(uint32_t time) {
   uint8_t buf[12] = { 0 };
   oid_generate(time, buf);
   return std::vector<uint8_t>(buf, buf + 12);
 }
 
-ObjectId ObjectId::createFromHexString(const std::string& hex) {
+inline ObjectId ObjectId::createFromHexString(const std::string& hex) {
   object_id coid;
   oid_create_from_hex_string(hex.c_str(), &coid);
   return coid;
 }
 
-ObjectId ObjectId::createFromTime(uint32_t time) {
+inline ObjectId ObjectId::createFromTime(uint32_t time) {
   object_id coid;
   oid_create_from_time(time, &coid);
   return coid;
 }
 
-bool ObjectId::isValid(const std::vector<uint8_t>& buf) {
+inline bool ObjectId::isValid(const std::vector<uint8_t>& buf) {
   uint64_t len = buf.size();
   return (len == 12 || len == 24);
 }
 
-bool ObjectId::isValid(const std::string& str) {
+inline bool ObjectId::isValid(const std::string& str) {
   return oid_is_valid(str.c_str());
 }
 
-std::string ObjectId::toHexString() const {
+inline std::string ObjectId::toHexString() const {
   char res[25] = { 0 };
   oid_to_hex_string(oid, res);
   return res;
 }
 
-bool ObjectId::equals(const ObjectId& objectId) const {
+inline bool ObjectId::equals(const ObjectId& objectId) const {
   return static_cast<bool>(oid_equals_oid(oid, objectId.oid));
 }
 
-bool ObjectId::operator==(const ObjectId& objectId) const {
+inline bool ObjectId::operator==(const ObjectId& objectId) const {
   return equals(objectId);
 }
 
-uint32_t ObjectId::getTimestamp() const {
+inline uint32_t ObjectId::getTimestamp() const {
   return oid_get_timestamp(oid);
 }
 

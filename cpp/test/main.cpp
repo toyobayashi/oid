@@ -86,6 +86,7 @@ static int should_create_from_hexstring() {
 
 int main () {
   int res = 0;
+  std::cout << ObjectId() << std::endl;
   res = describe("ObjectId",
     should_print,
     should_correctly_interpret_timestamps_beyond_2038,

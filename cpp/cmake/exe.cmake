@@ -6,6 +6,14 @@ if(LIB_NAME)
   target_link_libraries(${EXE_NAME} ${LIB_NAME})
 endif()
 
+execute_process(COMMAND node -p "require('./package.json').version"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE OID_VERSION
+)
+string(REPLACE "\n" "" OID_VERSION ${OID_VERSION})
+
+target_compile_definitions(${EXE_NAME} PRIVATE OID_VERSION=\"${OID_VERSION}\")
+
 if(WIN32 AND MSVC)
   # set_target_properties(${EXE_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   target_compile_options(${EXE_NAME} PRIVATE /utf-8)
