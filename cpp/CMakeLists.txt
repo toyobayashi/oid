@@ -6,6 +6,7 @@ set(LIB_NAME oid)
 set(EXE_NAME oidmain)
 set(TEST_EXE_NAME oidtest)
 
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 include(cmake/lib.cmake)
