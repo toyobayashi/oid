@@ -17,6 +17,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "@ccpm/cmocha": "^1.0.0"
+    "@ccpm/cmocha": "^1.0.1"
+  },
+  "dependencies": {
+    "@ccpm/dep-paths": "^1.0.0"
   }
 }
