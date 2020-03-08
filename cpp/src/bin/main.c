@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "oid.h"
+#include "oid/oid.h"
 
 #define OID_VERSION "1.0.0"
 
