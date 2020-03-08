@@ -12,11 +12,6 @@ set(TEST_EXE_NAME oidtest)
 include(cmake/lib.cmake)
 include(cmake/exe.cmake)
 
-if(CCPM_BUILD_TEST)
-  include(cmake/test.cmake)
-  target_link_libraries(${TEST_EXE_NAME} cmocha)
-endif()
-
 execute_process(COMMAND node index.js
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   OUTPUT_VARIABLE DEPS_LIST_oid
@@ -28,4 +23,9 @@ if(DEPS_LIST_oid)
     message("add_subdirectory: ${pkg} ${pkg}")
     add_subdirectory(${pkg} ${pkg})
   endforeach()
+endif()
+
+if(CCPM_BUILD_TEST)
+  include(cmake/test.cmake)
+  target_link_libraries(${TEST_EXE_NAME} cmocha)
 endif()
