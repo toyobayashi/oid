@@ -1,5 +1,5 @@
 {
-  "name": "@cpm/oid",
+  "name": "@ccpm/oid",
   "version": "1.0.0",
   "description": "C implemention for MongoDB ObjectID",
   "main": "index.js",
