@@ -1,6 +1,6 @@
 {
   "name": "@ccpm/oid",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "C implemention for MongoDB ObjectID",
   "main": "index.js",
   "author": "toyobayashi",

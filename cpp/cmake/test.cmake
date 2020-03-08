@@ -4,7 +4,7 @@ add_executable(${TEST_EXE_NAME}
   ${TEST_SOURCE_FILES}
 )
 
-# set_target_properties(${TEST_EXE_NAME} PROPERTIES CXX_STANDARD 11)
+set_target_properties(${TEST_EXE_NAME} PROPERTIES CXX_STANDARD 11)
 
 target_link_libraries(${TEST_EXE_NAME} ${LIB_NAME})
 
