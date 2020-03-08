@@ -12,14 +12,14 @@
 #endif
 
 #ifdef _WIN32
-  #ifdef BUILD_DLL_oid
+  #ifdef CCPM_BUILD_DLL_oid
   #define OID_API __declspec(dllexport)
   #else
   // #define OID_API __declspec(dllimport)
   #define OID_API
   #endif
 #else
-  #ifdef BUILD_DLL_oid
+  #ifdef CCPM_BUILD_DLL_oid
   #define OID_API __attribute__((visibility("default")))
   #else
   #define OID_API
