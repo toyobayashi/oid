@@ -4,6 +4,17 @@ C implemention for MongoDB ObjectID
 
 This is a C++ library, not for Node.js.
 
+## Setup
+
+``` bash
+$ npm install @ccpm/oid
+```
+
+``` cmake
+add_subdirectory(...)
+target_link_libraries(<TARGET> oid)
+```
+
 ## C API
 
 ``` c

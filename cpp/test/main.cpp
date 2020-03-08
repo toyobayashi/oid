@@ -4,7 +4,7 @@
 #include <cstdlib>
 #endif
 #include "oid/oid.hpp"
-#include "mocha.h"
+#include "cmocha/cmocha.h"
 
 static int should_correctly_handle_objectId_timestamps() {
   ObjectId a = ObjectId::createFromTime(1);

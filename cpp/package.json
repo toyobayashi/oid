@@ -1,11 +1,13 @@
 {
   "name": "@ccpm/oid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "C implemention for MongoDB ObjectID",
   "main": "index.js",
   "author": "toyobayashi",
   "license": "MIT",
-  "keywords": ["objectid"],
+  "keywords": [
+    "objectid"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/toyobayashi/oid.git"
@@ -13,5 +15,8 @@
   "homepage": "https://github.com/toyobayashi/oid/tree/master/cpp#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@ccpm/cmocha": "^1.0.0"
   }
 }
