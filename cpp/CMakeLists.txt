@@ -19,5 +19,6 @@ endif()
 include(cmake/npm.cmake)
 
 if(CCPM_BUILD_TEST)
+  dp_require("@ccpm/cmocha")
   target_link_libraries(${TEST_EXE_NAME} cmocha)
 endif()
