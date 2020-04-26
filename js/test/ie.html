@@ -1,8 +1,8 @@
-<script src="../index.js"></script>
+<script src="../dist/oid.js"></script>
 
 <script>
 (function () {
-
+  var ObjectId = oid.ObjectId;
   function assert(b, msg) {
     if (!b) {
       throw new Error(msg || 'error')

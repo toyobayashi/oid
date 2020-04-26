@@ -1,6 +1,6 @@
 {
   "name": "@tybys/oid",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "bin": {
     "oid": "./bin/oid.js"
   },
@@ -14,7 +14,7 @@
   "scripts": {
     "test": "mocha ./test/test.js",
     "tsc": "tsc -p test/ts",
-    "build": "uglifyjs index.js --ie8 -m -o dist/oid.min.js",
+    "build": "node ./scripts/build.js",
     "webpack": "webpack ./test/webpack/index.js --devtool none --mode development --output ./test/webpack/main.js&&node ./test/webpack/main.js"
   },
   "repository": {
@@ -27,14 +27,23 @@
     "url": "https://github.com/toyobayashi/oid/issues"
   },
   "homepage": "https://github.com/toyobayashi/oid/tree/master/js#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^7.1.3",
     "@types/node": "^12.7.5",
-    "eslint": "^6.4.0",
-    "mocha": "^6.2.0",
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.2",
+    "rollup": "^2.7.2",
+    "rollup-plugin-terser": "^5.3.0",
     "should": "^13.2.3",
-    "typescript": "^3.6.3",
-    "uglify-js": "^3.6.0",
-    "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10"
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "@tybys/native-require": "^1.1.0"
   }
 }

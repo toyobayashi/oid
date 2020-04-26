@@ -1,8 +1,11 @@
 /* eslint-disable no-undef */
+var ObjectId;
 
-if (typeof require !== 'undefined') {
+if (typeof window === 'undefined') {
   require('should');
-  var ObjectId = require('../');
+  ObjectId = require('../').ObjectId;
+} else {
+  ObjectId = oid.ObjectId;
 }
 
 describe('ObjectIds', function() {

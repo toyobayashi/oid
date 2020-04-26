@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var ObjectId = require('../index.js');
+var ObjectId = require('../index.js').ObjectId;
 
 function printHelp() {
   console.log('Usage: oid [options]');

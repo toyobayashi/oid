@@ -2,8 +2,8 @@
 
 Use MongoDB ObjectID without installing bson.
 
-* `index.js`: 18KB
-* `dist/oid.min.js`: 8KB
+* `dist/oid.js`: 17KB
+* `dist/oid.min.js`: 7KB
 
 ## Usage
 
@@ -36,25 +36,22 @@ IE OK!
 <!-- or end -->
 
 <script>
-var oid = new ObjectId();
-console.log(oid);
+console.log(new oid.ObjectId());
 </script>
 ```
 
 ### Node.js
 
 ``` js
-const ObjectId = require('@tybys/oid')
-const oid = new ObjectId()
-console.log(oid)
+const { ObjectId } = require('@tybys/oid')
+console.log(new ObjectId())
 ```
 
 ### TypeScript
 
 ``` ts
-import * as ObjectId from '@tybys/oid'
-const oid = new ObjectId()
-console.log(oid)
+import { ObjectId } from '@tybys/oid'
+console.log(new ObjectId())
 ```
 
 ## API
@@ -64,7 +61,15 @@ Same as [mongodb/js-bson/lib/objectid.js](https://github.com/mongodb/js-bson/blo
 See [`index.d.ts`](https://github.com/toyobayashi/oid/blob/master/index.d.ts).
 
 ``` ts
-declare class ObjectId {
+export declare interface EmptyDocument {
+  $oid: string;
+}
+
+export declare interface Document extends EmptyDocument {
+  [field: string]: any;
+}
+
+export declare class ObjectId {
   constructor(id?: number | string | number[] | Uint8Array | ObjectId);
 
   static createFromTime(time: number): ObjectId;
@@ -79,7 +84,7 @@ declare class ObjectId {
 
   static getInc(): number;
 
-  static fromExtendedJSON(doc: ObjectId.Document): ObjectId;
+  static fromExtendedJSON(doc: Document): ObjectId;
 
   static index: number;
 
@@ -99,18 +104,6 @@ declare class ObjectId {
 
   toJSON(): string;
 
-  toExtendedJSON(): ObjectId.EmptyDocument;
+  toExtendedJSON(): EmptyDocument;
 }
-
-declare namespace ObjectId {
-  export interface EmptyDocument {
-    $oid: string;
-  }
-
-  export interface Document extends EmptyDocument {
-    [field: string]: any;
-  }
-}
-
-export = ObjectId;
 ```

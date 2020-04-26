@@ -1,4 +1,12 @@
-declare class ObjectId {
+export declare interface EmptyDocument {
+  $oid: string;
+}
+
+export declare interface Document extends EmptyDocument {
+  [field: string]: any;
+}
+
+export declare class ObjectId {
   constructor(id?: number | string | number[] | Uint8Array | ObjectId);
 
   static createFromTime(time: number): ObjectId;
@@ -13,7 +21,7 @@ declare class ObjectId {
 
   static getInc(): number;
 
-  static fromExtendedJSON(doc: ObjectId.Document): ObjectId;
+  static fromExtendedJSON(doc: Document): ObjectId;
 
   static index: number;
 
@@ -33,17 +41,5 @@ declare class ObjectId {
 
   toJSON(): string;
 
-  toExtendedJSON(): ObjectId.EmptyDocument;
+  toExtendedJSON(): EmptyDocument;
 }
-
-declare namespace ObjectId {
-  export interface EmptyDocument {
-    $oid: string;
-  }
-
-  export interface Document extends EmptyDocument {
-    [field: string]: any;
-  }
-}
-
-export = ObjectId;

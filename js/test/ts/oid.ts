@@ -1,4 +1,4 @@
-import * as ObjectId from '../../index';
+import { ObjectId } from '../../index';
 
 // ----------------------------------------------------------------------------
 // setup test data
