@@ -4,9 +4,9 @@ const config = require('./config')
 
 const { terser } = require('rollup-plugin-terser')
 const rollupCommonJS = require('@rollup/plugin-commonjs')
-const rollupNodeResolve = require('@rollup/plugin-node-resolve')
+const rollupNodeResolve = require('@rollup/plugin-node-resolve').default
 
-const { nativeRequireRollupPlugin } = require('@tybys/native-require/plugins/rollup.js')
+// const { nativeRequireRollupPlugin } = require('@tybys/native-require/plugins/rollup.js')
 
 const p = function (...args) {
   const path = require('path')
@@ -20,7 +20,7 @@ function getRollupConfig (minify) {
     input: {
       input: p(config.entry),
       plugins: [
-        nativeRequireRollupPlugin(),
+        // nativeRequireRollupPlugin(),
         rollupNodeResolve(),
         rollupCommonJS({
           extensions: ['.js']

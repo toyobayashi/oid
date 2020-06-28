@@ -1,4 +1,4 @@
-var nativeRequire = require('@tybys/native-require').nativeRequire;
+var nativeRequire = require('@tybys/native-require/index.js').nativeRequire;
 
 var __Buffer;
 try {

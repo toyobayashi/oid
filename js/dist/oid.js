@@ -4,7 +4,9 @@
 	(global = global || self, factory(global.oid = {}));
 }(this, (function (exports) { 'use strict';
 
-	
+	function commonjsRequire () {
+		throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+	}
 
 	var nativeRequire;
 
@@ -14,7 +16,7 @@
 	  })();
 	} else {
 	  nativeRequire = (function () {
-	    return typeof __webpack_modules__ !== 'undefined' ? (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined) : (typeof require !== 'undefined' ? require : undefined);
+	    return typeof __webpack_modules__ !== 'undefined' ? (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined) : (typeof commonjsRequire !== 'undefined' ? commonjsRequire : undefined);
 	  })();
 	}
 
