@@ -2,8 +2,8 @@
 
 Use MongoDB ObjectID without installing bson.
 
-* `dist/oid.js`: 17KB
-* `dist/oid.min.js`: 7KB
+* `dist/oid.js`: 20KB
+* `dist/oid.min.js`: 8KB
 
 ## Usage
 
@@ -30,13 +30,10 @@ Repo: https://github.com/toyobayashi/oid
 IE OK!
 
 ``` html
-<script src="node_modules/@tybys/oid/index.js"></script>
-<!-- or -->
-<!-- <script src="node_modules/@tybys/oid/dist/oid.min.js"></script> -->
-<!-- or end -->
+<script src="https://cdn.jsdelivr.net/npm/@tybys/oid/dist/oid.min.js"></script>
 
 <script>
-console.log(new oid.ObjectId());
+console.log(new oid.ObjectId().toHexString());
 </script>
 ```
 

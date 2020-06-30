@@ -3,7 +3,7 @@ var ObjectId;
 
 if (typeof window === 'undefined') {
   require('should');
-  ObjectId = require('../').ObjectId;
+  ObjectId = require('../dist/oid.js').ObjectId;
 } else {
   ObjectId = oid.ObjectId;
 }
