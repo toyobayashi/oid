@@ -1,4 +1,14 @@
-var nativeRequire = require('@tybys/native-require/index.js').nativeRequire;
+var nativeRequire;
+
+if (typeof __webpack_modules__ !== 'undefined') {
+  nativeRequire = (function() {
+    return typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined;
+  })();
+} else {
+  nativeRequire = (function() {
+    return typeof __webpack_modules__ !== 'undefined' ? (typeof __non_webpack_require__ !== 'undefined' ? __non_webpack_require__ : undefined) : (typeof require !== 'undefined' ? require : undefined);
+  })();
+}
 
 var __Buffer;
 try {
