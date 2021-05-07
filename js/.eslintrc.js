@@ -1,18 +1,40 @@
 module.exports = {
+  root: true,
   env: {
-    browser: true,
-    node: true
+    node: true,
+    browser: true
   },
-  extends: ['eslint:recommended'],
+  parser: '@typescript-eslint/parser',
+  extends: [
+    'standard-with-typescript'
+  ],
   rules: {
-    semi: ['error', 'always'],
-    quotes: ['error', 'single'],
-    indent: ['error', 2, { SwitchCase: 1 }],
-    'space-before-function-paren': ['error', 'never'],
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/promise-function-async': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/consistent-type-definitions': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/member-delimiter-style': ['error', {
+      multiline: {
+        delimiter: 'none',
+        requireLast: true
+      },
+      singleline: {
+        delimiter: 'semi',
+        requireLast: false
+      }
+    }]
+  },
+  parserOptions: {
+    ecmaVersion: 2019,
+    sourceType: 'module',
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    createDefaultProgram: true
   },
   globals: {
-    define: false,
-    __non_webpack_require__: false,
-    Uint8Array: false
+    __non_webpack_require__: false
   }
 }
