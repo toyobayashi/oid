@@ -6,3 +6,5 @@
 node_modules
 /typings
 /test
+
+/index.js

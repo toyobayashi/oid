@@ -4,4 +4,4 @@
  * @packageDocumentation
  */
 
-export function f (): void {}
+export { ObjectId } from './objectid'
