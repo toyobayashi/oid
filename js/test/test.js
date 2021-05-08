@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+
+/** @type {typeof import('../dist/oid').ObjectId} */
 var ObjectId;
 
 if (typeof window === 'undefined') {
@@ -45,16 +47,7 @@ describe('ObjectIds', function() {
     it('should correctly allow for node.js inspect to work with ObjectId', function() {
       var a = 'AAAAAAAAAAAAAAAAAAAAAAAA';
       var b = new ObjectId(a);
-      require('util').inspect(b);
-  
-      // var c = b.equals(a); // => false
-      // expect(true).to.equal(c);
-      //
-      // var a = 'aaaaaaaaaaaaaaaaaaaaaaaa';
-      // var b = new ObjectId(a);
-      // var c = b.equals(a); // => true
-      // expect(true).to.equal(c);
-      // expect(a).to.equal(b.toString());
+      require('util').inspect(b).should.equal('new ObjectId("aaaaaaaaaaaaaaaaaaaaaaaa")')
     });
   }
 
@@ -63,9 +56,9 @@ describe('ObjectIds', function() {
     var buffTooLong = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
     var buff12Bytes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-    ObjectId.isValid(buffTooShort).should.not.be.ok;
-    ObjectId.isValid(buffTooLong).should.not.be.ok;
-    ObjectId.isValid(buff12Bytes).should.be.ok;
+    ObjectId.isValid(buffTooShort).should.not.be.ok();
+    ObjectId.isValid(buffTooLong).should.not.be.ok();
+    ObjectId.isValid(buff12Bytes).should.be.ok();
   });
 
   it('should throw if a 12-char string is passed in with character codes greater than 256', function() {
@@ -88,7 +81,7 @@ describe('ObjectIds', function() {
     var o = new ObjectId();
     o.should.have.property('id');
     o.id.should.have.length(12);
-    ObjectId.isValid(o.id).should.not.be.ok;
+    ObjectId.isValid(o.id).should.be.ok();
   });
 
   it('should construct with a `time` argument', function() {
@@ -135,13 +128,6 @@ describe('ObjectIds', function() {
     o.toHexString().should.eql(hexString);
   });
 
-  it('should construct with a `idString` argument', function() {
-    var idString = 'TIZÙLG!íçm';
-    var o = new ObjectId(idString);
-    o.should.be.instanceof(ObjectId);
-    o.id.should.eql(idString);
-  });
-
   it('should construct with `ObjectId.createFromTime(time)` and should have 0\'s at the end', function() {
     var time = 1414093117;
     var o = ObjectId.createFromTime(time);
@@ -165,47 +151,47 @@ describe('ObjectIds', function() {
   });
 
   it('should validate valid hex strings', function() {
-    ObjectId.isValid('54495ad94c934721ede76d90').should.be.ok;
-    ObjectId.isValid('aaaaaaaaaaaaaaaaaaaaaaaa').should.be.ok;
-    ObjectId.isValid('AAAAAAAAAAAAAAAAAAAAAAAA').should.be.ok;
-    ObjectId.isValid('000000000000000000000000').should.be.ok;
+    ObjectId.isValid('54495ad94c934721ede76d90').should.be.ok();
+    ObjectId.isValid('aaaaaaaaaaaaaaaaaaaaaaaa').should.be.ok();
+    ObjectId.isValid('AAAAAAAAAAAAAAAAAAAAAAAA').should.be.ok();
+    ObjectId.isValid('000000000000000000000000').should.be.ok();
   });
 
   it('should validate legit ObjectId objects', function() {
     var o = new ObjectId();
-    ObjectId.isValid(o).should.be.ok;
+    ObjectId.isValid(o).should.be.ok();
   });
 
   it('should invalidate bad strings', function() {
-    ObjectId.isValid().should.not.be.ok;
-    ObjectId.isValid(null).should.not.be.ok;
-    ObjectId.isValid({}).should.not.be.ok;
-    ObjectId.isValid([]).should.not.be.ok;
-    ObjectId.isValid(true).should.not.be.ok;
-    ObjectId.isValid('invalid').should.not.be.ok;
-    ObjectId.isValid('').should.not.be.ok;
-    ObjectId.isValid('zzzzzzzzzzzzzzzzzzzzzzzz').should.not.be.ok;
-    ObjectId.isValid('54495-ad94c934721ede76d9').should.not.be.ok;
+    ObjectId.isValid().should.not.be.ok();
+    ObjectId.isValid(null).should.not.be.ok();
+    ObjectId.isValid({}).should.not.be.ok();
+    ObjectId.isValid([]).should.not.be.ok();
+    ObjectId.isValid(true).should.not.be.ok();
+    ObjectId.isValid('invalid').should.not.be.ok();
+    ObjectId.isValid('').should.not.be.ok();
+    ObjectId.isValid('zzzzzzzzzzzzzzzzzzzzzzzz').should.not.be.ok();
+    ObjectId.isValid('54495-ad94c934721ede76d9').should.not.be.ok();
   });
 
   it('should evaluate equality with .equals()', function() {
     var id1 = new ObjectId();
     var id2 = new ObjectId(id1.toHexString());
-    (id1.equals(id2)).should.be.true;
+    (id1.equals(id2)).should.be.true();
   });
 
   it('should evaluate equality with via deepEqual', function() {
     var id1 = new ObjectId();
     var id2 = new ObjectId(id1.toHexString());
-    id1.should.eql(id2);
+    id1.id.should.eql(id2.id);
 
     var id3 = new ObjectId();
-    id1.should.not.eql(id3, 'id1 is not the same as id3');
+    id1.id.should.not.eql(id3.id, 'id1 is not the same as id3');
   });
 
   it('should generate valid hex strings', function() {
     var h = ObjectId.generate();
-    ObjectId.isValid(h).should.be.ok;
+    ObjectId.isValid(h).should.be.ok();
   });
 
   it('should convert to a hex string for JSON.stringify', function() {
@@ -229,7 +215,22 @@ describe('ObjectIds', function() {
 
   it('should not throw an error for objects without toString', function() {
     var obj = Object.create({}, { toString: { value: false, writeable: false } });
-    obj.toString.should.not.be.ok;
-    ObjectId.isValid(obj).should.not.be.ok;
+    obj.toString.should.not.be.ok();
+    ObjectId.isValid(obj).should.not.be.ok();
   });
+
+  if (typeof window === 'undefined') {
+    it('should correctly create ObjectId from Buffer', function () {
+      var a = 'AAAAAAAAAAAAAAAAAAAAAAAA';
+      var b = new ObjectId(Buffer.from(a, 'hex'));
+      var c = b.equals(a); // => false
+      c.should.be.true()
+  
+      a = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+      b = new ObjectId(Buffer.from(a, 'hex'));
+      c = b.equals(a); // => true
+      a.should.eql(b.toString())
+      c.should.be.true()
+    });
+  }
 });

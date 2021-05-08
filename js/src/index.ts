@@ -1,7 +1,10 @@
 /**
- * Example library
+ * Use MongoDB ObjectID without installing bson.
  *
  * @packageDocumentation
  */
 
-export { ObjectId } from './objectid'
+import { ObjectId } from './objectid'
+export type { ObjectIdLike, ObjectIdExtended } from './objectid'
+
+export { ObjectId }

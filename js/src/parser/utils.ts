@@ -1,9 +1,9 @@
 import { bufferAlloc } from '../util/buffer'
 import { tryGetRequireFunction } from '../util/require'
 
-const _require = tryGetRequireFunction(module)
+const _require = tryGetRequireFunction()
 
-type RandomBytesFunction = (size: number) => Uint8Array | number[]
+type RandomBytesFunction = (size: number) => Uint8Array
 
 const isReactNative = typeof navigator === 'object' && navigator.product === 'ReactNative'
 
@@ -16,7 +16,7 @@ const insecureRandomBytes: RandomBytesFunction = function insecureRandomBytes (s
 
   const result = bufferAlloc(size)
   for (let i = 0; i < size; ++i) result[i] = Math.floor(Math.random() * 256)
-  return result
+  return result as Uint8Array
 }
 
 const detectRandomBytes = (): RandomBytesFunction => {
@@ -24,13 +24,13 @@ const detectRandomBytes = (): RandomBytesFunction => {
     // browser crypto implementation(s)
     const target: Crypto = window.crypto || (window as any).msCrypto // allow for IE11
     if (target?.getRandomValues) {
-      return size => target.getRandomValues(Buffer.alloc(size))
+      return size => target.getRandomValues(new Uint8Array(size))
     }
   }
 
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
     // allow for RN packages such as https://www.npmjs.com/package/react-native-get-random-values to populate global
-    return size => crypto.getRandomValues(Buffer.alloc(size))
+    return size => crypto.getRandomValues(new Uint8Array(size))
   }
 
   let requiredRandomBytes: RandomBytesFunction | null | undefined
@@ -52,10 +52,6 @@ export function isAnyArrayBuffer (value: unknown): value is ArrayBuffer {
   return ['[object ArrayBuffer]', '[object SharedArrayBuffer]'].indexOf(
     Object.prototype.toString.call(value)
   ) !== -1
-}
-
-export function isUint8Array (value: unknown): value is Uint8Array {
-  return Object.prototype.toString.call(value) === '[object Uint8Array]'
 }
 
 export function deprecate<T extends Function> (fn: T, message: string): T {

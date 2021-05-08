@@ -2,6 +2,7 @@
   "extends": "./node_modules/@tybys/tsgo/tsconfig/tsconfig.esm.json",
   "compilerOptions": {
     "outDir": "./lib/esm",
+    "target": "ES3",
     "importHelpers": false,
     "noEmitHelpers": false,
     "importsNotUsedAsValues": "error"

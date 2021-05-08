@@ -131,13 +131,6 @@
     assert(o.toHexString() === hexString, 'o.toHexString() === hexString');
   });
 
-  it('should construct with a `idString` argument', function() {
-    var idString = 'TIZÙLG!íçm';
-    var o = new ObjectId(idString);
-    assert(o instanceof ObjectId, 'o instanceof ObjectId');
-    assert(o.id === idString, 'o.id === idString');
-  });
-
   it('should construct with `ObjectId.createFromTime(time)` and should have 0\'s at the end', function() {
     var time = 1414093117;
     var o = ObjectId.createFromTime(time);
