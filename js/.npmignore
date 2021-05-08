@@ -13,3 +13,6 @@ api-extractor.json
 gulpfile.*
 /test
 tsgo.config*
+
+/lib
+/src
