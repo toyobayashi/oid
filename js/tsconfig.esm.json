@@ -5,7 +5,10 @@
     "target": "ES3",
     "importHelpers": false,
     "noEmitHelpers": false,
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "error",
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "./src/**/*"

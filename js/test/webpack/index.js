@@ -1,4 +1,4 @@
-var ObjectId = require('../../index.js').ObjectId;
+var ObjectId = require('../..').ObjectId;
 
 console.log(new ObjectId().toString());
 console.log(new ObjectId());
