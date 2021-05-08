@@ -6,7 +6,6 @@
     "noImplicitAny": true
   },
   "files": [
-    "../../index.d.ts",
     "./oid.ts"
   ]
 }

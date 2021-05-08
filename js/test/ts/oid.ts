@@ -1,4 +1,4 @@
-import { ObjectId } from '../../index';
+import { ObjectId } from '../..';
 
 // ----------------------------------------------------------------------------
 // setup test data
@@ -22,7 +22,7 @@ oid = new ObjectId(time);
 
 // ----------------------------------------------------------------------------
 // should construct with an `array` argument
-oid = new ObjectId(array);
+// oid = new ObjectId(array);
 
 // ----------------------------------------------------------------------------
 // should construct with a `buffer` argument
