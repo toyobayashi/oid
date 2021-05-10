@@ -1,0 +1,10 @@
+/scripts
+/dist
+
+/dist
+/lib
+node_modules
+/typings
+/test
+
+/index.js

@@ -1,0 +1,17 @@
+{
+  "extends": "./node_modules/@tybys/tsgo/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib/cjs-modern",
+    "target": "ES5",
+    "noEmit": true,
+    "importHelpers": false,
+    "noEmitHelpers": false,
+    "importsNotUsedAsValues": "error",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
