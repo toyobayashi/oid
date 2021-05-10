@@ -1,6 +1,6 @@
 {
   "name": "@tybys/oid-lite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use MongoDB ObjectID without installing bson.",
   "jsdelivr": "./dist/oid.js",
   "unpkg": "./dist/oid.js",
