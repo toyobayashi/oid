@@ -1,7 +1,8 @@
 module.exports = {
-  // output: {
-  //   doc: false
-  // },
+  output: {
+    name: 'oid'
+    // doc: false
+  },
   library: 'oid',
   bundleOnly: ['umd', 'cjs', { type: 'esm-bundler', minify: false }, 'esm-browser'],
   bundleDefine: {
