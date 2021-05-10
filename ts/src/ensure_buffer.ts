@@ -9,8 +9,8 @@ import { bufferFrom } from './util/buffer'
  * wraps a passed in Uint8Array
  * @throws TypeError If anything other than a Buffer or Uint8Array is passed in
  */
-export function ensureBuffer (potentialBuffer: Uint8Array | ArrayBufferView | ArrayBuffer): Uint8Array | number[] {
-  if ((typeof ArrayBuffer === 'function' && typeof Uint8Array === 'function') && (ArrayBuffer.isView?.(potentialBuffer) || potentialBuffer instanceof Uint8Array)) {
+export function ensureBuffer (potentialBuffer: Uint8Array | ArrayBufferView | ArrayBuffer): Uint8Array {
+  if (ArrayBuffer.isView(potentialBuffer)) {
     return new Uint8Array(
       potentialBuffer.buffer,
       potentialBuffer.byteOffset,

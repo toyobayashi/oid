@@ -1,16 +1,3 @@
-import { tryGetRequireFunction } from '../util/require'
-
-const _require = tryGetRequireFunction()
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-let __Buffer: undefined | typeof import('buffer').Buffer
-
-if (typeof _require === 'function') {
-  try {
-    __Buffer = _require('buffer').Buffer
-  } catch (_) {}
-}
-
 function numberIsNaN (obj: any): obj is number {
   if (Number.isNaN) {
     return Number.isNaN(obj)
@@ -18,92 +5,43 @@ function numberIsNaN (obj: any): obj is number {
   return typeof obj === 'number' && isNaN(obj)
 }
 
-const toString = Object.prototype.toString
-
-function isArray (o: unknown): o is any[] {
-  if (Array.isArray) {
-    return Array.isArray(o)
-  }
-  return (toString.call(o) === '[object Array]')
+export function bufferAlloc (len: number): Uint8Array {
+  return new Uint8Array(len)
 }
 
-export function isBufferOrArray (o: unknown): o is Uint8Array | number[] {
-  return (typeof Uint8Array !== 'undefined' && o instanceof Uint8Array) || (toString.call(o) === '[object Uint8Array]') || isArray(o)
-}
-
-export function bufferAlloc (len: number): Uint8Array | number[] {
-  if (__Buffer) {
-    return __Buffer.alloc(len)
+export function bufferFrom (buf: string | ArrayBuffer | Uint8Array | number[]): Uint8Array {
+  if (buf instanceof ArrayBuffer) {
+    return new Uint8Array(buf)
   }
-
-  let i
-  if (typeof Uint8Array !== 'undefined') {
-    return new Uint8Array(len)
+  if (ArrayBuffer.isView(buf)) {
+    if (typeof Uint8Array.from === 'function') {
+      return Uint8Array.from(buf)
+    } else {
+      const origin = new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
+      const uint8arr = new Uint8Array(buf.byteLength)
+      for (let i = 0; i < buf.byteLength; i++) {
+        uint8arr[i] = origin[i]
+      }
+      return uint8arr
+    }
   }
-
-  const arr = []
-  for (i = 0; i < len; i++) {
-    arr[i] = 0
-  }
-
-  return arr
-}
-
-export function bufferFrom (buf: string | ArrayBuffer | Uint8Array | number[]): Uint8Array | number[] {
-  if (__Buffer) {
-    return __Buffer.from(buf as any)
-  }
-  let i
-  if (typeof ArrayBuffer === 'function') {
-    if (buf instanceof ArrayBuffer) {
+  if (Array.isArray(buf)) {
+    if (typeof Uint8Array.from === 'function') {
+      return Uint8Array.from(buf)
+    } else {
       return new Uint8Array(buf)
     }
-    if (ArrayBuffer.isView?.(buf) || buf instanceof Uint8Array) {
-      if (typeof Uint8Array.from === 'function') {
-        return Uint8Array.from(buf)
-      } else {
-        const origin = new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
-        const uint8arr = new Uint8Array(buf.byteLength)
-        for (i = 0; i < buf.byteLength; i++) {
-          uint8arr[i] = origin[i]
-        }
-        return uint8arr
-      }
-    }
-    if (isArray(buf)) {
-      if (typeof Uint8Array.from === 'function') {
-        return Uint8Array.from(buf)
-      } else {
-        return new Uint8Array(buf)
-      }
-    }
-    if (typeof buf === 'string') {
-      const bytes = utf8ToBytes(buf)
-      return bufferFrom(bytes)
-    }
   }
-
   if (typeof buf === 'string') {
-    return utf8ToBytes(buf)
+    const bytes = utf8ToBytes(buf)
+    return bufferFrom(bytes)
   }
 
-  const arr = []
-  for (i = 0; i < (buf as any).length; i++) {
-    arr[i] = (buf as any)[i]
-  }
-  return arr
+  throw new TypeError('The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received type ' + typeof buf)
 }
 
-export function bufferFromHex (buf: string): Uint8Array | number[] {
-  if (__Buffer) {
-    return __Buffer.from(buf, 'hex')
-  }
-  let arr: Uint8Array | number[]
-  if (typeof Uint8Array === 'function') {
-    arr = new Uint8Array(Math.floor(buf.length / 2))
-  } else {
-    arr = new Array(Math.floor(buf.length / 2))
-  }
+export function bufferFromHex (buf: string): Uint8Array {
+  const arr: Uint8Array = new Uint8Array(Math.floor(buf.length / 2))
 
   hexWrite(arr, buf)
 
@@ -113,10 +51,7 @@ export function bufferFromHex (buf: string): Uint8Array | number[] {
   return arr
 }
 
-export function readUInt32BE (this: Uint8Array | number[], offset: number = 0): number {
-  if (__Buffer?.isBuffer(this)) {
-    return this.readUInt32BE(offset)
-  }
+export function readUInt32BE (this: Uint8Array, offset: number = 0): number {
   const type = typeof offset
   if (type !== 'number') {
     throw new TypeError('The offset argument must be of type number. Received type ' + type)
@@ -133,10 +68,7 @@ export function readUInt32BE (this: Uint8Array | number[], offset: number = 0): 
     last
 }
 
-export function readInt32BE (this: Uint8Array | number[], offset: number = 0): number {
-  if (__Buffer?.isBuffer(this)) {
-    return this.readInt32BE(offset)
-  }
+export function readInt32BE (this: Uint8Array, offset: number = 0): number {
   const type = typeof offset
   if (type !== 'number') {
     throw new TypeError('The offset argument must be of type number. Received type ' + type)
@@ -153,7 +85,7 @@ export function readInt32BE (this: Uint8Array | number[], offset: number = 0): n
     last
 }
 
-function checkInt (value: number, min: number, max: number, buf: Uint8Array | number[], offset: number, byteLength: number): void {
+function checkInt (value: number, min: number, max: number, buf: Uint8Array, offset: number, byteLength: number): void {
   if (value > max || value < min) {
     const n = typeof min === 'bigint' ? 'n' : ''
     let range
@@ -175,7 +107,7 @@ function checkInt (value: number, min: number, max: number, buf: Uint8Array | nu
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function writeU_Int32BE (buf: Uint8Array | number[], value: number, offset: number, min: number, max: number): number {
+function writeU_Int32BE (buf: Uint8Array, value: number, offset: number, min: number, max: number): number {
   value = +value
   checkInt(value, min, max, buf, offset, 3)
 
@@ -189,12 +121,12 @@ function writeU_Int32BE (buf: Uint8Array | number[], value: number, offset: numb
   return offset + 4
 }
 
-export function writeUInt32BE (this: Uint8Array | number[], value: number, offset = 0): number {
+export function writeUInt32BE (this: Uint8Array, value: number, offset = 0): number {
   return writeU_Int32BE(this, value, offset, 0, 0xffffffff)
 }
 
-export function bufferEquals (this: Uint8Array | number[], target: Uint8Array | number[]): boolean {
-  if (!isBufferOrArray(target)) {
+export function bufferEquals (this: Uint8Array, target: Uint8Array): boolean {
+  if (!(target instanceof Uint8Array)) {
     throw new TypeError(
       'The "target" argument must be one of type Buffer or Uint8Array. ' +
       'Received type ' + (typeof target)
@@ -208,10 +140,7 @@ export function bufferEquals (this: Uint8Array | number[], target: Uint8Array | 
   return true
 }
 
-export function bufferToString (this: Uint8Array | number[], encoding: BufferEncoding): string {
-  if (__Buffer) {
-    return __Buffer.from(this).toString(encoding)
-  }
+export function bufferToString (this: Uint8Array, encoding: BufferEncoding): string {
   let res = ''
   let i = 0
   if (encoding === 'hex') {
@@ -338,7 +267,7 @@ function utf8ToBytes (string: string, units = Infinity): number[] {
   return bytes
 }
 
-function hexWrite (buf: Uint8Array | number[], string: string, offset = 0): number {
+function hexWrite (buf: Uint8Array, string: string, offset = 0): number {
   const remaining = buf.length - offset
   let length = remaining
 

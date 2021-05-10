@@ -52,9 +52,9 @@ describe('ObjectIds', function() {
   }
 
   it('should isValid check input Buffer length', function() {
-    var buffTooShort = [];
-    var buffTooLong = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    var buff12Bytes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    var buffTooShort = new Uint8Array([]);
+    var buffTooLong = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    var buff12Bytes = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
     ObjectId.isValid(buffTooShort).should.not.be.ok();
     ObjectId.isValid(buffTooLong).should.not.be.ok();
@@ -62,8 +62,8 @@ describe('ObjectIds', function() {
   });
 
   it('should throw if a 12-char string is passed in with character codes greater than 256', function() {
-    (() => new ObjectId('abcdefghijkl').toHexString()).should.not.throw();
-    (() => new ObjectId('abcdefŽhijkl').toHexString()).should.throw(TypeError);
+    (function () { return new ObjectId('abcdefghijkl').toHexString() }).should.not.throw();
+    (function () { return new ObjectId('abcdefŽhijkl').toHexString() }).should.throw(TypeError);
   });
 
   it('should correctly interpret timestamps beyond 2038', function() {
@@ -91,35 +91,26 @@ describe('ObjectIds', function() {
     o.toHexString().substr(0,8).should.eql('5449593d');
   });
 
-  it('should construct with an `array` argument', function() {
-    var array = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
-    var o = new ObjectId(array);
-    o.should.be.instanceof(ObjectId);
-    o.toHexString().should.eql('54495ad94c934721ede76d90');
-  });
-
   if (typeof window === 'undefined') {
     it('should construct with a `buffer` argument', function() {
       var buffer = Buffer.from([ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ]);
       var o = new ObjectId(buffer);
       o.should.be.instanceof(ObjectId);
-      o.id.should.be.instanceof(Buffer);
+      o.id.should.be.instanceof(Uint8Array);
       o.toHexString().should.eql('54495ad94c934721ede76d90');
     });
   }
   
-  if (typeof Uint8Array !== 'undefined') {
-    it('should construct with a `Uint8Array` argument', function() {
-      var buffer = new Uint8Array(12);
-      var copy = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
-      for (var i = 0; i < 12; i++) {
-        buffer[i] = copy[i];
-      }
-      var o = new ObjectId(buffer);
-      o.should.be.instanceof(ObjectId);
-      o.toHexString().should.eql('54495ad94c934721ede76d90');
-    });
-  }
+  it('should construct with a `Uint8Array` argument', function() {
+    var buffer = new Uint8Array(12);
+    var copy = [ 84, 73, 90, 217, 76, 147, 71, 33, 237, 231, 109, 144 ];
+    for (var i = 0; i < 12; i++) {
+      buffer[i] = copy[i];
+    }
+    var o = new ObjectId(buffer);
+    o.should.be.instanceof(ObjectId);
+    o.toHexString().should.eql('54495ad94c934721ede76d90');
+  });
 
   it('should construct with a `hexString` argument', function() {
     var hexString = '54495ad94c934721ede76d90';
