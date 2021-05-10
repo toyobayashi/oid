@@ -18,6 +18,16 @@ console.log(new oid.ObjectId().toHexString());
 </script>
 ```
 
+`Symbol` & `TypedArray` polyfill is required by legacy browsers. Use [@tybys/oid](https://www.npmjs.com/package/@tybys/oid) for full support.
+
+``` html
+<script src="https://cdn.jsdelivr.net/npm/@tybys/oid/dist/oid.min.js"></script>
+
+<script>
+console.log(new oid.ObjectId().toHexString());
+</script>
+```
+
 ### Node.js
 
 ``` js
