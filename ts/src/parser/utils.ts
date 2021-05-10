@@ -1,4 +1,5 @@
 import { bufferAlloc } from '../util/buffer'
+import { _require } from '../util/require'
 
 type RandomBytesFunction = (size: number) => Uint8Array
 
@@ -30,7 +31,17 @@ const detectRandomBytes = (): RandomBytesFunction => {
     return size => crypto.getRandomValues(new Uint8Array(size))
   }
 
-  return insecureRandomBytes
+  let requiredRandomBytes: RandomBytesFunction | null | undefined
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    requiredRandomBytes = _require!('crypto').randomBytes
+  } catch (e) {
+    // keep the fallback
+  }
+
+  // NOTE: in transpiled cases the above require might return null/undefined
+
+  return requiredRandomBytes ?? insecureRandomBytes
 }
 
 export const randomBytes = detectRandomBytes()
@@ -46,10 +57,13 @@ export function isAnyArrayBuffer (value: unknown): value is ArrayBuffer {
 }
 
 export function deprecate<T extends Function> (fn: T, message: string): T {
+  if (typeof _require === 'function') {
+    return _require('util').deprecate(fn, message)
+  }
   let warned = false
   function deprecated (this: unknown, ...args: unknown[]): any {
     if (!warned) {
-      console.warn(message)
+      if (typeof console !== 'undefined') console.warn(message)
       warned = true
     }
     return fn.apply(this, args)
